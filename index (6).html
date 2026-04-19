@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Stock Hub</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --navy:#0a1540;--navy2:#162060;
+      --pinkbg:#f0b8d5;--pinkmid:#de90ba;--pinkdark:#b85090;
+      --mag:#c0006a;--mag2:#980055;--maglt:#e8007e;
+      --white:#fff;--topp:#08102e;--dimp:#5a1858;
+      --danger:#c00030;--success:#007a40;
+      --r:6px;--t:180ms ease;
+    }
+    *{-webkit-font-smoothing:antialiased}
+    body{background:var(--pinkbg);color:var(--topp);font-family:'Inter',sans-serif;font-size:14px;font-weight:500;min-height:100vh}
+    h1,h2,h3{font-family:'Playfair Display',serif;font-weight:700}
+
+    /* LOADING */
+    #loading{display:flex;align-items:center;justify-content:center;min-height:100vh;flex-direction:column;gap:16px}
+    .spinner{width:40px;height:40px;border:3px solid var(--pinkmid);border-top-color:var(--mag);border-radius:50%;animation:spin 0.8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* AUTH */
+    #auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .auth-card{background:#fff;border:2px solid var(--pinkmid);border-radius:16px;padding:40px;width:100%;max-width:460px;box-shadow:0 20px 60px rgba(10,21,64,0.15)}
+    .auth-logo{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+    .auth-logo-icon{background:var(--navy);border-radius:10px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:#ff70b0;font-size:22px}
+    .auth-logo h1{font-size:22px;color:var(--navy);letter-spacing:0.04em}
+    .auth-logo span{display:block;font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--pinkdark);margin-top:2px}
+    .auth-title{font-size:24px;color:var(--navy);margin-bottom:6px}
+    .auth-sub{font-size:13px;color:var(--dimp);font-weight:500;margin-bottom:24px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+    .fl{font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--navy)}
+    .fi{background:var(--pinkbg);border:2px solid var(--pinkdark);border-radius:var(--r);padding:10px 14px;color:var(--topp);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;outline:none;width:100%;transition:all var(--t)}
+    .fi:focus{border-color:var(--mag);background:#fff}
+    .fi::placeholder{color:var(--pinkdark);font-weight:500}
+    select.fi{cursor:pointer}
+    .btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 20px;border-radius:var(--r);font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all var(--t);border:none;letter-spacing:0.02em;width:100%}
+    .btn-p{background:var(--mag);color:#fff;margin-top:6px}
+    .btn-p:hover{background:var(--maglt)}
+    .btn-p:disabled{opacity:0.6;cursor:not-allowed}
+    .btn-g{background:transparent;border:2px solid var(--pinkdark);color:var(--dimp)}
+    .btn-g:hover{border-color:var(--mag);color:var(--mag)}
+    .btn-sm{width:auto;padding:8px 16px;font-size:12px}
+    .auth-link{text-align:center;margin-top:16px;font-size:13px;color:var(--dimp);font-weight:500}
+    .auth-link a{color:var(--mag);font-weight:700;cursor:pointer;text-decoration:none}
+    .auth-link a:hover{text-decoration:underline}
+    .auth-divider{display:flex;align-items:center;gap:12px;margin:16px 0}
+    .auth-divider hr{flex:1;border:none;border-top:2px solid var(--pinkmid)}
+    .auth-divider span{font-size:11px;font-weight:700;color:var(--pinkdark);text-transform:uppercase;letter-spacing:0.1em}
+    .account-type-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+    .type-card{border:2px solid var(--pinkmid);border-radius:8px;padding:14px;cursor:pointer;transition:all var(--t);text-align:center}
+    .type-card:hover{border-color:var(--mag)}
+    .type-card.selected{border-color:var(--mag);background:rgba(192,0,106,0.06)}
+    .type-card h4{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:3px}
+    .type-card p{font-size:11px;color:var(--dimp);font-weight:500}
+    .type-card .badge-free{display:inline-block;background:#007a40;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-bottom:6px;letter-spacing:0.05em}
+    .type-card .badge-paid{display:inline-block;background:var(--mag);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-bottom:6px;letter-spacing:0.05em}
+
+    /* APP HEADER */
+    #app-screen{min-height:100vh;display:flex;flex-direction:column}
+    .hdr{background:var(--navy);border-bottom:3px solid var(--mag);padding:0 28px;display:flex;align-items:center;justify-content:space-between;min-height:66px;position:sticky;top:0;z-index:100}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand-icon{color:#ff70b0;font-size:22px}
+    .brand h1{font-size:20px;color:#fff;letter-spacing:0.05em}
+    .brand-sub{display:block;font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#99aadd;margin-top:2px}
+    .hdr-right{display:flex;align-items:center;gap:14px}
+    .user-name{font-size:13px;font-weight:700;color:#fff}
+    .user-type{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#99aadd}
+    .hdr-btn{background:rgba(255,255,255,0.12);border:2px solid rgba(255,255,255,0.3);border-radius:20px;color:#fff;font-size:11px;font-weight:700;padding:6px 14px;cursor:pointer;transition:all var(--t);font-family:'Inter',sans-serif;letter-spacing:0.06em;text-transform:uppercase}
+    .hdr-btn:hover{background:rgba(255,255,255,0.22);border-color:rgba(255,255,255,0.6)}
+    .hdr-btn.active{background:var(--mag);border-color:var(--maglt)}
+
+    /* NAV TABS */
+    .nav-tabs{background:var(--pinkmid);border-bottom:2px solid var(--pinkdark);padding:0 28px;display:flex;gap:4px}
+    .nav-tab{padding:12px 20px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all var(--t);color:var(--dimp)}
+    .nav-tab:hover{color:var(--navy)}
+    .nav-tab.active{color:var(--navy);border-bottom-color:var(--mag)}
+
+    /* MAIN CONTENT */
+    .main{flex:1;padding:28px;max-width:1200px;margin:0 auto;width:100%}
+
+    /* HUB SETUP */
+    .hub-setup{background:#fff;border:2px solid var(--pinkmid);border-radius:12px;padding:40px;max-width:560px;margin:0 auto;text-align:center}
+    .hub-setup h2{font-size:26px;color:var(--navy);margin-bottom:8px}
+    .hub-setup p{font-size:13px;color:var(--dimp);font-weight:500;margin-bottom:28px;line-height:1.6}
+    .hub-setup .fg{text-align:left}
+    .hub-setup .btn{margin-top:8px}
+
+    /* HUB HEADER */
+    .hub-hdr{background:#fff;border:2px solid var(--pinkmid);border-radius:12px;padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .hub-info h2{font-size:22px;color:var(--navy);margin-bottom:2px}
+    .hub-info p{font-size:12px;color:var(--dimp);font-weight:500}
+    .hub-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .discover-toggle{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--dimp)}
+    .toggle{width:36px;height:20px;background:var(--pinkmid);border-radius:10px;cursor:pointer;position:relative;transition:all var(--t);border:none;flex-shrink:0}
+    .toggle.on{background:var(--mag)}
+    .toggle::after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;background:#fff;border-radius:50%;transition:all var(--t)}
+    .toggle.on::after{left:19px}
+
+    /* TOOLBAR */
+    .toolbar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+    .srch{flex:1;min-width:200px;display:flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--pinkdark);border-radius:var(--r);padding:9px 14px;transition:border-color var(--t)}
+    .srch:focus-within{border-color:var(--mag)}
+    .srch input{background:none;border:none;outline:none;color:var(--topp);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;width:100%}
+    .srch input::placeholder{color:var(--pinkdark);font-weight:500}
+    .srch-icon{color:var(--mag);font-size:16px;flex-shrink:0}
+    .tagbar{display:flex;flex-wrap:wrap;gap:6px;flex:2}
+    .ftag{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;transition:all var(--t);border:2px solid var(--mag2);color:var(--mag2);background:rgba(255,255,255,0.65);font-family:'Inter',sans-serif}
+    .ftag:hover{background:var(--mag2);color:#fff}
+    .ftag.on{background:var(--mag);border-color:var(--mag);color:#fff}
+    .cnt{font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap}
+    .add-btn{display:flex;align-items:center;gap:6px;padding:9px 18px;border-radius:var(--r);background:var(--mag);color:#fff;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all var(--t);white-space:nowrap}
+    .add-btn:hover{background:var(--maglt)}
+
+    /* GRID */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+    .card{background:#fff;border:2px solid var(--pinkmid);border-radius:10px;overflow:hidden;cursor:pointer;transition:all var(--t);display:flex;flex-direction:column}
+    .card:hover{border-color:var(--mag);transform:translateY(-3px);box-shadow:0 10px 32px rgba(10,21,64,0.18)}
+    .card-img{width:100%;aspect-ratio:4/3;background:var(--pinkbg);display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:42px}
+    .card-img img{width:100%;height:100%;object-fit:cover}
+    .card-body{padding:14px 16px;flex:1;display:flex;flex-direction:column;gap:10px}
+    .card-name{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--navy);line-height:1.25}
+    .card-owner{font-size:11px;font-weight:600;color:var(--dimp)}
+    .card-tags{display:flex;flex-wrap:wrap;gap:5px}
+    .chip{padding:3px 9px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:0.06em;background:var(--pinkbg);border:1.5px solid var(--pinkdark);color:var(--mag2)}
+    .card-acts{display:flex;gap:6px;justify-content:flex-end;margin-top:auto;padding-top:10px;border-top:2px solid var(--pinkbg)}
+    .ic-btn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;border-radius:6px;cursor:pointer;color:var(--dimp);transition:all var(--t);font-size:16px}
+    .ic-btn:hover{background:var(--pinkbg);color:var(--navy)}
+    .ic-btn.del:hover{color:var(--danger)}
+
+    /* EMPTY */
+    .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;gap:14px;color:var(--dimp);text-align:center}
+    .empty-icon{font-size:52px;opacity:0.3}
+    .empty h3{font-size:22px;font-weight:700;font-family:'Playfair Display',serif}
+    .empty p{font-size:13px;font-weight:500}
+
+    /* MODAL */
+    .backdrop{position:fixed;inset:0;background:rgba(8,16,46,0.75);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+    .modal{background:#fff;border:2px solid var(--pinkmid);border-radius:12px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(8,16,46,0.4)}
+    .modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:22px 26px 16px;border-bottom:2px solid var(--pinkbg);position:sticky;top:0;background:#fff}
+    .modal-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--navy)}
+    .modal-body{padding:22px 26px 26px;display:flex;flex-direction:column;gap:16px}
+    .modal-foot{display:flex;justify-content:flex-end;gap:8px;padding-top:6px}
+    .modal-foot .btn{width:auto}
+    .close-btn{background:none;border:none;cursor:pointer;font-size:20px;color:var(--dimp);line-height:1;transition:color var(--t)}
+    .close-btn:hover{color:var(--navy)}
+
+    /* UPLOAD */
+    .uzone{border:2.5px dashed var(--pinkdark);border-radius:var(--r);padding:28px;text-align:center;cursor:pointer;transition:all var(--t);color:var(--dimp);display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--pinkbg)}
+    .uzone:hover,.uzone.drag{border-color:var(--mag);color:var(--mag);background:#fff0f6}
+    .uzone-icon{font-size:28px}
+    .uzone p{font-size:13px;font-weight:700}
+    .uzone small{font-size:11px;font-weight:500;color:var(--pinkdark)}
+    .prev{width:100%;border-radius:var(--r);object-fit:cover;max-height:200px;border:2px solid var(--pinkmid)}
+
+    /* TAGS */
+    .tags-ed{display:flex;flex-direction:column;gap:8px}
+    .tags-row{display:flex;gap:8px}
+    .tags-list{display:flex;flex-wrap:wrap;gap:6px}
+    .tpill{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;background:var(--pinkbg);border:2px solid var(--pinkdark);color:var(--mag2)}
+    .tpill button{background:none;border:none;cursor:pointer;color:var(--pinkdark);font-size:14px;line-height:1;transition:color var(--t)}
+    .tpill button:hover{color:var(--danger)}
+
+    /* LIGHTBOX */
+    .lbox{position:fixed;inset:0;background:rgba(8,16,46,0.97);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
+    .lbox-in{max-width:800px;width:100%;text-align:center}
+    .lbox-in img{max-height:68vh;object-fit:contain;border-radius:8px;width:100%}
+    .lbox-name{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#fff;margin:18px 0 10px}
+    .lbox-owner{font-size:13px;font-weight:600;color:#aabcee;margin-bottom:10px}
+    .lbox-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+    .lbox-close{position:absolute;top:20px;right:20px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.4);border-radius:50%;cursor:pointer;color:#fff;font-size:20px;transition:all var(--t)}
+    .lbox-close:hover{background:rgba(255,255,255,0.28)}
+
+    /* BROWSE */
+    .browse-filters{background:#fff;border:2px solid var(--pinkmid);border-radius:10px;padding:18px 20px;margin-bottom:20px;display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+    .browse-filters .fg{margin-bottom:0;flex:1;min-width:140px}
+    .browse-filters .btn{width:auto;margin-top:0;align-self:flex-end}
+
+    /* PROFILE PAGE */
+    .profile-card{background:#fff;border:2px solid var(--pinkmid);border-radius:12px;padding:32px;max-width:560px;margin:0 auto}
+    .profile-card h2{font-size:24px;color:var(--navy);margin-bottom:20px}
+
+    /* TOAST */
+    #toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--navy);border:2px solid var(--mag);padding:11px 20px;border-radius:8px;color:#fff;font-size:13px;font-weight:700;display:none;animation:fu 0.2s ease}
+    #toast.success{border-color:#00b060;background:#004428}
+    #toast.error{border-color:var(--danger);background:#5a0018}
+    @keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ALERT */
+    .alert{padding:11px 14px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:4px}
+    .alert.error{background:#fff0f2;border:2px solid var(--danger);color:var(--danger)}
+    .alert.success{background:#f0fff6;border:2px solid var(--success);color:var(--success)}
+
+    /* BROWSE HUB CARD */
+    .hub-card{background:#fff;border:2px solid var(--pinkmid);border-radius:10px;padding:18px 20px;cursor:pointer;transition:all var(--t)}
+    .hub-card:hover{border-color:var(--mag);transform:translateY(-2px);box-shadow:0 8px 24px rgba(10,21,64,0.14)}
+    .hub-card h3{font-size:18px;color:var(--navy);margin-bottom:4px}
+    .hub-card p{font-size:12px;color:var(--dimp);font-weight:500}
+    .hub-card .meta{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
+    .hub-card .meta span{font-size:11px;font-weight:700;color:var(--pinkdark);background:var(--pinkbg);padding:3px 9px;border-radius:10px}
+
+    .section-title{font-size:18px;color:var(--navy);margin-bottom:16px}
+    .back-btn{background:none;border:none;cursor:pointer;color:var(--mag);font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;margin-bottom:16px;font-family:'Inter',sans-serif;padding:0}
+    .back-btn:hover{color:var(--navy)}
+
+    .card-code{font-size:11px;font-weight:700;color:var(--pinkdark);letter-spacing:0.06em;margin-top:-4px}
+    mark{background:#ffe066;color:var(--navy);border-radius:2px;padding:0 1px}
+    .clear-btn{background:var(--danger);color:#fff;border:none;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all var(--t)}
+    .clear-btn:hover{background:#a00020}
+    @media(max-width:600px){
+      .auth-card{padding:28px 20px}
+      .form-row{grid-template-columns:1fr}
+      .main{padding:16px}
+      .hdr{padding:0 16px}
+    }
+  </style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="spinner"></div>
+  <p style="color:var(--navy);font-weight:600;font-size:14px">Loading My Stock Hub…</p>
+</div>
+
+<div id="auth-screen" style="display:none">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">⬡</div>
+      <div>
+        <h1>MY STOCK HUB</h1>
+        <span>Creative Inventory</span>
+      </div>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="login-form">
+      <h2 class="auth-title">Welcome back</h2>
+      <p class="auth-sub">Sign in to your account</p>
+      <div id="login-alert"></div>
+      <div class="fg"><label class="fl">Email</label><input class="fi" type="email" id="login-email" placeholder="your@email.com"/></div>
+      <div class="fg"><label class="fl">Password</label><input class="fi" type="password" id="login-password" placeholder="Your password"/></div>
+      <button class="btn btn-p" onclick="handleLogin()">Sign In</button>
+      <div class="auth-link"><a onclick="showAuth('forgot')">Forgot your password?</a></div>
+      <div class="auth-divider"><hr/><span>or</span><hr/></div>
+      <div class="auth-link">Don't have an account? <a onclick="showAuth('register')">Register free</a></div>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="register-form" style="display:none">
+      <h2 class="auth-title">Create your account</h2>
+      <p class="auth-sub">Join My Stock Hub — free for viewers, paid for hub owners</p>
+      <div id="register-alert"></div>
+      <p style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--navy);margin-bottom:8px">Account Type</p>
+      <div class="account-type-row">
+        <div class="type-card selected" id="type-viewer" onclick="selectType('viewer')">
+          <div class="badge-free">FREE</div>
+          <h4>Viewer</h4>
+          <p>Browse &amp; search all hubs</p>
+        </div>
+        <div class="type-card" id="type-owner" onclick="selectType('owner')">
+          <div class="badge-paid">PAID (TESTING: FREE)</div>
+          <h4>Hub Owner</h4>
+          <p>Your own inventory hub</p>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label class="fl">First Name</label><input class="fi" type="text" id="reg-firstname" placeholder="Jane"/></div>
+        <div class="fg"><label class="fl">Last Name</label><input class="fi" type="text" id="reg-lastname" placeholder="Smith"/></div>
+      </div>
+      <div class="fg"><label class="fl">Email</label><input class="fi" type="email" id="reg-email" placeholder="your@email.com"/></div>
+      <div class="fg"><label class="fl">Password</label><input class="fi" type="password" id="reg-password" placeholder="Min 6 characters"/></div>
+      <div class="fg"><label class="fl">Country</label>
+        <select class="fi" id="reg-country">
+          <option value="">Select country…</option>
+          <option>Australia</option><option>Canada</option><option>France</option><option>Germany</option>
+          <option>Ireland</option><option>Italy</option><option>New Zealand</option><option>South Africa</option>
+          <option>Spain</option><option>United Kingdom</option><option>United States</option><option>Other</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label class="fl">State / Region</label><input class="fi" type="text" id="reg-state" placeholder="e.g. Victoria"/></div>
+        <div class="fg"><label class="fl">Town / City</label><input class="fi" type="text" id="reg-town" placeholder="e.g. Melbourne"/></div>
+      </div>
+      <button class="btn btn-p" onclick="handleRegister()">Create Account</button>
+      <div class="auth-link" style="margin-top:14px">Already have an account? <a onclick="showAuth('login')">Sign in</a></div>
+    </div>
+
+    <!-- FORGOT PASSWORD -->
+    <div id="forgot-form" style="display:none">
+      <h2 class="auth-title">Reset password</h2>
+      <p class="auth-sub">Enter your email and we'll send you a reset link</p>
+      <div id="forgot-alert"></div>
+      <div class="fg"><label class="fl">Email</label><input class="fi" type="email" id="forgot-email" placeholder="your@email.com"/></div>
+      <button class="btn btn-p" onclick="handleForgot()">Send Reset Link</button>
+      <div class="auth-link"><a onclick="showAuth('login')">← Back to sign in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app-screen" style="display:none">
+  <header class="hdr">
+    <div class="brand">
+      <span class="brand-icon">⬡</span>
+      <div>
+        <h1>MY STOCK HUB</h1>
+        <span class="brand-sub">Creative Inventory</span>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <div style="text-align:right">
+        <div class="user-name" id="hdr-name">—</div>
+        <div class="user-type" id="hdr-type">—</div>
+      </div>
+      <button class="hdr-btn" id="tab-hub-btn" onclick="switchTab('hub')">My Hub</button>
+      <button class="hdr-btn" onclick="switchTab('browse')">Browse</button>
+      <button class="hdr-btn" onclick="switchTab('profile')">Profile</button>
+      <button class="hdr-btn" onclick="handleLogout()">Sign Out</button>
+    </div>
+  </header>
+
+  <div class="nav-tabs">
+    <div class="nav-tab active" id="nav-hub" onclick="switchTab('hub')">My Hub</div>
+    <div class="nav-tab" id="nav-browse" onclick="switchTab('browse')">Browse Hubs</div>
+    <div class="nav-tab" id="nav-profile" onclick="switchTab('profile')">My Profile</div>
+  </div>
+
+  <div class="main">
+    <!-- HUB TAB -->
+    <div id="tab-hub">
+      <div id="hub-content"></div>
+    </div>
+
+    <!-- BROWSE TAB -->
+    <div id="tab-browse" style="display:none">
+      <div id="browse-content"></div>
+    </div>
+
+    <!-- PROFILE TAB -->
+    <div id="tab-profile" style="display:none">
+      <div id="profile-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ITEM MODAL -->
+<div id="item-modal" class="backdrop" style="display:none" onclick="closeItemModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-hdr">
+      <span class="modal-title" id="item-modal-title">Add Item</span>
+      <button class="close-btn" onclick="closeItemModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="item-form-alert"></div>
+      <div class="form-row">
+        <div class="fg"><label class="fl">Item Name</label><input class="fi" id="item-name" placeholder="Enter item name…"/></div>
+        <div class="fg"><label class="fl">Product Code</label><input class="fi" id="item-code" placeholder="e.g. AUT-001"/></div>
+      </div>
+      <div class="fg">
+        <label class="fl">Image</label>
+        <div id="upload-area">
+          <div class="uzone" id="uzone" onclick="document.getElementById('file-input').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)">
+            <div class="uzone-icon">📤</div>
+            <p>Drop image or click to upload</p>
+            <small>PNG · JPG · WEBP</small>
+          </div>
+          <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFile(this.files[0])"/>
+        </div>
+        <div id="preview-area" style="display:none">
+          <img id="img-preview" class="prev" alt=""/>
+          <button class="btn btn-g btn-sm" style="margin-top:8px;width:auto" onclick="removeImage()">Remove Image</button>
+        </div>
+      </div>
+      <div class="fg">
+        <label class="fl">Tags</label>
+        <div class="tags-ed">
+          <div class="tags-row">
+            <input class="fi" id="tag-input" placeholder="Type a tag and press Enter…" onkeydown="if(event.key==='Enter'){event.preventDefault();addTag()}"/>
+            <button class="btn btn-g btn-sm" onclick="addTag()">Add</button>
+          </div>
+          <div class="tags-list" id="tags-list"></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-g btn-sm" onclick="closeItemModal()">Cancel</button>
+        <button class="btn btn-p btn-sm" onclick="saveItem()">Save Item</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HUB SETTINGS MODAL -->
+<div id="hub-modal" class="backdrop" style="display:none" onclick="closeHubModal(event)">
+  <div class="modal" style="max-width:420px" onclick="event.stopPropagation()">
+    <div class="modal-hdr">
+      <span class="modal-title">Hub Settings</span>
+      <button class="close-btn" onclick="closeHubModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fg"><label class="fl">Hub Name</label><input class="fi" id="hub-name-input" placeholder="e.g. Sarah's Art Supplies"/></div>
+      <div class="fg"><label class="fl">Hub Label <span style="font-weight:500;text-transform:none;letter-spacing:0;font-size:11px">(optional)</span></label><input class="fi" id="hub-label-input" placeholder="e.g. Fabric Collection · Art Room"/></div>
+      <div class="modal-foot">
+        <button class="btn btn-g btn-sm" onclick="closeHubModal()">Cancel</button>
+        <button class="btn btn-p btn-sm" onclick="saveHubSettings()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" class="lbox" style="display:none" onclick="closeLightbox()">
+  <button class="lbox-close" onclick="closeLightbox()">✕</button>
+  <div class="lbox-in" onclick="event.stopPropagation()">
+    <img id="lbox-img" src="" alt="" style="display:none"/>
+    <div class="lbox-name" id="lbox-name"></div>
+    <div class="lbox-owner" id="lbox-owner"></div>
+    <div class="lbox-tags" id="lbox-tags"></div>
+  </div>
+</div>
+
+
+<!-- BULK UPLOAD MODAL -->
+<div id="bulk-modal" class="backdrop" style="display:none" onclick="closeBulkModal(event)">
+  <div class="modal" style="max-width:560px" onclick="event.stopPropagation()">
+    <div class="modal-hdr">
+      <span class="modal-title">Bulk Upload Items</span>
+      <button class="close-btn" onclick="closeBulkModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="bulk-alert"></div>
+
+      <div style="background:var(--pinkbg);border:2px solid var(--pinkmid);border-radius:8px;padding:14px 16px;display:flex;align-items:flex-start;gap:10px">
+        <span style="font-size:18px">📋</span>
+        <div>
+          <p style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px">How bulk upload works</p>
+          <p style="font-size:12px;font-weight:500;color:var(--dimp);line-height:1.6">Download the CSV template, fill in your product names and codes, then upload it back. All items will be created with your shared tag. You can add images and extra tags to each item afterwards.</p>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="fl">Shared Tag for this batch</label>
+        <input class="fi" id="bulk-tag" placeholder="e.g. autumn, spring-2025, new-arrivals…"/>
+        <small style="font-size:11px;font-weight:500;color:var(--pinkdark);margin-top:4px;display:block">This tag will be applied to every item in this upload</small>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-g btn-sm" style="width:auto" onclick="downloadTemplate()">⬇ Download CSV Template</button>
+        <span style="font-size:12px;font-weight:500;color:var(--dimp)">Fill it in, then upload below</span>
+      </div>
+
+      <div class="fg">
+        <label class="fl">Upload completed CSV</label>
+        <div class="uzone" id="csv-zone" onclick="document.getElementById('csv-input').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleCsvDrop(event)">
+          <div class="uzone-icon">📂</div>
+          <p>Drop CSV file or click to upload</p>
+          <small>.csv files only</small>
+        </div>
+        <input type="file" id="csv-input" accept=".csv" style="display:none" onchange="handleCsvFile(this.files[0])"/>
+      </div>
+
+      <div id="csv-preview" style="display:none">
+        <label class="fl" style="margin-bottom:8px">Preview — <span id="csv-count"></span></label>
+        <div style="background:var(--pinkbg);border:2px solid var(--pinkmid);border-radius:8px;max-height:200px;overflow-y:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:12px">
+            <thead>
+              <tr style="background:var(--pinkmid)">
+                <th style="padding:8px 12px;text-align:left;font-weight:700;color:var(--navy)">Product Name</th>
+                <th style="padding:8px 12px;text-align:left;font-weight:700;color:var(--navy)">Product Code</th>
+                <th style="padding:8px 12px;text-align:left;font-weight:700;color:var(--navy)">Status</th>
+              </tr>
+            </thead>
+            <tbody id="csv-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-foot">
+        <button class="btn btn-g btn-sm" onclick="closeBulkModal()">Cancel</button>
+        <button class="btn btn-p btn-sm" id="bulk-save-btn" style="display:none" onclick="saveBulkItems()">Upload All Items</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://mdyorlbybimpywiyigyn.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_uzYQkBBfZ9jeum9XLmh29w_JE2wouPt';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+let currentProfile = null;
+let currentHub = null;
+let currentItems = [];
+let editingItemId = null;
+let currentTags = [];
+let currentImage = null;
+let activeFilterTags = [];
+let searchQuery = '';
+let selectedAccountType = 'viewer';
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    await loadUser(session.user);
+  } else {
+    showScreen('auth');
+    showAuth('login');
+  }
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      await loadUser(session.user);
+    } else if (event === 'SIGNED_OUT') {
+      currentUser = null; currentProfile = null; currentHub = null;
+      showScreen('auth'); showAuth('login');
+    }
+  });
+}
+
+async function loadUser(user) {
+  currentUser = user;
+  let { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  if (!profile) {
+    const meta = user.user_metadata || {};
+    await sb.from('profiles').insert({
+      id: user.id,
+      email: user.email,
+      account_type: meta.account_type || 'viewer',
+      full_name: meta.full_name || '',
+      country: meta.country || '',
+      state: meta.state || '',
+      town: meta.town || ''
+    });
+    ({ data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single());
+  }
+  currentProfile = profile;
+  updateHeader();
+  if (profile.account_type === 'owner') {
+    const { data: hub } = await sb.from('hubs').select('*').eq('owner_id', user.id).single();
+    currentHub = hub;
+    document.getElementById('tab-hub-btn').style.display = '';
+    document.getElementById('nav-hub').style.display = '';
+    showScreen('app');
+    switchTab('hub');
+    await renderHubTab();
+  } else {
+    showScreen('app');
+    document.getElementById('tab-hub-btn').style.display = 'none';
+    document.getElementById('nav-hub').style.display = 'none';
+    switchTab('browse');
+    await renderBrowseTab();
+  }
+}
+
+function updateHeader() {
+  if (!currentProfile) return;
+  document.getElementById('hdr-name').textContent = (currentProfile.full_name || currentProfile.email || '');
+  document.getElementById('hdr-type').textContent = currentProfile.account_type === 'owner' ? 'Hub Owner' : 'Viewer';
+}
+
+// ── SCREENS ───────────────────────────────────────────────────────────────────
+function showScreen(name) {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('auth-screen').style.display = name === 'auth' ? 'flex' : 'none';
+  document.getElementById('app-screen').style.display = name === 'app' ? 'flex' : 'none';
+}
+function showAuth(mode) {
+  document.getElementById('login-form').style.display = mode === 'login' ? 'block' : 'none';
+  document.getElementById('register-form').style.display = mode === 'register' ? 'block' : 'none';
+  document.getElementById('forgot-form').style.display = mode === 'forgot' ? 'block' : 'none';
+}
+function switchTab(tab) {
+  ['hub','browse','profile'].forEach(t => {
+    document.getElementById(`tab-${t}`).style.display = t === tab ? 'block' : 'none';
+    const nav = document.getElementById(`nav-${t}`);
+    if (nav) nav.classList.toggle('active', t === tab);
+  });
+  if (tab === 'hub') renderHubTab();
+  if (tab === 'browse') renderBrowseTab();
+  if (tab === 'profile') renderProfileTab();
+}
+function selectType(type) {
+  selectedAccountType = type;
+  document.getElementById('type-viewer').classList.toggle('selected', type === 'viewer');
+  document.getElementById('type-owner').classList.toggle('selected', type === 'owner');
+}
+
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+async function handleLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  document.getElementById('login-alert').innerHTML = '';
+  if (!email || !password) return showAlert('login-alert', 'Please enter your email and password.', 'error');
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) showAlert('login-alert', error.message, 'error');
+}
+async function handleRegister() {
+  const email = document.getElementById('reg-email').value.trim();
+  const password = document.getElementById('reg-password').value;
+  const firstname = document.getElementById('reg-firstname').value.trim();
+  const lastname = document.getElementById('reg-lastname').value.trim();
+  const country = document.getElementById('reg-country').value;
+  const state = document.getElementById('reg-state').value.trim();
+  const town = document.getElementById('reg-town').value.trim();
+  document.getElementById('register-alert').innerHTML = '';
+  if (!email || !password || !firstname || !lastname) return showAlert('register-alert', 'Please fill in all required fields.', 'error');
+  if (password.length < 6) return showAlert('register-alert', 'Password must be at least 6 characters.', 'error');
+  const { data, error } = await sb.auth.signUp({ email, password, options: { data: { account_type: selectedAccountType, full_name: `${firstname} ${lastname}`, country, state, town } } });
+  if (error) return showAlert('register-alert', error.message, 'error');
+  if (data.user) {
+    await sb.from('profiles').upsert({
+      id: data.user.id, email,
+      full_name: `${firstname} ${lastname}`,
+      country, state, town,
+      account_type: selectedAccountType
+    });
+  }
+  showAlert('register-alert', 'Account created! Signing you in…', 'success');
+}
+async function handleForgot() {
+  const email = document.getElementById('forgot-email').value.trim();
+  document.getElementById('forgot-alert').innerHTML = '';
+  if (!email) return showAlert('forgot-alert', 'Please enter your email address.', 'error');
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: 'https://mystockhub.netlify.app' });
+  if (error) return showAlert('forgot-alert', error.message, 'error');
+  showAlert('forgot-alert', 'Reset link sent! Check your inbox.', 'success');
+}
+async function handleLogout() {
+  await sb.auth.signOut();
+}
+function showAlert(id, msg, type) {
+  document.getElementById(id).innerHTML = `<div class="alert ${type}">${msg}</div>`;
+}
+
+// ── HUB TAB ───────────────────────────────────────────────────────────────────
+async function renderHubTab() {
+  const el = document.getElementById('hub-content');
+  if (currentProfile.account_type !== 'owner') {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">🔒</div><h3>Viewers cannot create hubs</h3><p>Upgrade to a Hub Owner account to manage your own inventory.</p></div>';
+    return;
+  }
+  if (!currentHub) {
+    el.innerHTML = `
+      <div class="hub-setup">
+        <h2>Create Your Hub</h2>
+        <p>Give your inventory hub a name so others can find and recognise it.</p>
+        <div class="fg"><label class="fl">Hub Name</label><input class="fi" id="new-hub-name" placeholder="e.g. Sarah's Art Supplies"/></div>
+        <div class="fg"><label class="fl">Hub Label <span style="font-weight:500;text-transform:none;letter-spacing:0;font-size:11px">(optional)</span></label><input class="fi" id="new-hub-label" placeholder="e.g. Fabric Collection"/></div>
+        <button class="btn btn-p" onclick="createHub()">Create Hub</button>
+      </div>`;
+    return;
+  }
+  const { data: items } = await sb.from('items').select('*').eq('hub_id', currentHub.id).order('created_at', { ascending: false });
+  currentItems = items || [];
+  renderHubContent();
+}
+
+function renderHubContent() {
+  const el = document.getElementById('hub-content');
+  const filtered = filterItems(currentItems);
+  const allTags = [...new Set(currentItems.flatMap(i => i.tags || []))].sort();
+
+  el.innerHTML = `
+    <div class="hub-hdr">
+      <div class="hub-info">
+        <h2>${currentHub.name}</h2>
+        ${currentHub.label ? `<p>${currentHub.label}</p>` : ''}
+      </div>
+      <div class="hub-actions">
+        <label class="discover-toggle">
+          <button class="toggle ${currentHub.is_discoverable ? 'on' : ''}" id="disc-toggle" onclick="toggleDiscoverable()"></button>
+          ${currentHub.is_discoverable ? 'Discoverable' : 'Hidden from search'}
+        </label>
+        <button class="add-btn btn-sm" onclick="openHubModal()">⚙ Settings</button>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="srch"><span class="srch-icon">🔍</span><input id="hub-search-input" placeholder="Search items or tags…" oninput="hubSearchLive(this.value)" value="${searchQuery}"/></div>
+      ${allTags.length ? `<div class="tagbar">${allTags.map(t => `<button class="ftag ${activeFilterTags.includes(t)?'on':''}" onclick="toggleFilterTag('${t}')">${t}</button>`).join('')}</div>` : ''}
+      <span class="cnt">${filtered.length} / ${currentItems.length} items</span>
+      ${(activeFilterTags.length > 0 || searchQuery) ? '<button class="clear-btn" onclick="clearAllFilters()">✕ Clear filters</button>' : ''}
+      <button class="add-btn" onclick="openItemModal()">＋ Add Item</button>
+      <button class="add-btn" style="background:var(--navy2)" onclick="openBulkModal()">⬆ Bulk Upload</button>
+    </div>
+    <div class="grid" id="items-grid">
+      ${filtered.length === 0 ? `<div class="empty" style="grid-column:1/-1"><div class="empty-icon">📦</div><h3>${currentItems.length===0?'Your hub is empty':'No items match'}</h3><p>${currentItems.length===0?'Add your first item to get started':''}</p></div>` : filtered.map(item => renderItemCard(item, true)).join('')}
+    </div>`;
+}
+
+function renderItemCard(item, editable) {
+  const imgHtml = item.image_url ? `<img src="${item.image_url}" alt="${item.name}" onerror="this.parentNode.innerHTML='📦'"/>` : '📦';
+  const q = searchQuery.trim();
+  const displayName = highlightMatch(item.name, q);
+  const tagsHtml = (item.tags||[]).map(t => `<span class="chip">${highlightMatch(t, q)}</span>`).join('');
+  const acts = editable ? `<div class="card-acts"><button class="ic-btn" onclick="event.stopPropagation();openItemModal('${item.id}')">✏️</button><button class="ic-btn del" onclick="event.stopPropagation();deleteItem('${item.id}')">🗑️</button></div>` : '';
+  return `<div class="card" onclick="openLightbox('${item.id}')">
+    <div class="card-img">${imgHtml}</div>
+    <div class="card-body">
+      <div class="card-name">${displayName}</div>
+      ${item.product_code ? `<div class="card-code">${item.product_code}</div>` : ''}
+      ${item.owner_name ? `<div class="card-owner">by ${item.owner_name}</div>` : ''}
+      ${tagsHtml ? `<div class="card-tags">${tagsHtml}</div>` : ''}
+      ${acts}
+    </div>
+  </div>`;
+}
+
+function fuzzyMatch(text, query) {
+  if (!query) return true;
+  text = text.toLowerCase();
+  query = query.toLowerCase();
+  // Direct partial match first
+  if (text.includes(query)) return true;
+  // Fuzzy: all characters of query appear in order in text
+  let ti = 0, qi = 0;
+  while (ti < text.length && qi < query.length) {
+    if (text[ti] === query[qi]) qi++;
+    ti++;
+  }
+  return qi === query.length;
+}
+
+function filterItems(items) {
+  return items.filter(i => {
+    const q = searchQuery.trim();
+    const matchSearch = !q ||
+      fuzzyMatch(i.name, q) ||
+      (i.tags||[]).some(t => fuzzyMatch(t, q));
+    const matchTags = activeFilterTags.length === 0 ||
+      activeFilterTags.every(t => (i.tags||[]).includes(t));
+    return matchSearch && matchTags;
+  });
+}
+
+function highlightMatch(text, query) {
+  if (!query) return text;
+  const idx = text.toLowerCase().indexOf(query.toLowerCase());
+  if (idx === -1) return text;
+  return text.slice(0, idx) + '<mark>' + text.slice(idx, idx + query.length) + '</mark>' + text.slice(idx + query.length);
+}
+
+function hubSearchLive(val) {
+  searchQuery = val;
+  renderHubContent();
+}
+
+function clearAllFilters() {
+  searchQuery = '';
+  activeFilterTags = [];
+  const input = document.getElementById('hub-search-input');
+  if (input) input.value = '';
+  renderHubContent();
+}
+
+let browseDebounceTimer = null;
+function debouncedBrowseSearch() {
+  clearTimeout(browseDebounceTimer);
+  browseDebounceTimer = setTimeout(() => searchHubs(), 300);
+}
+function toggleFilterTag(tag) {
+  activeFilterTags = activeFilterTags.includes(tag) ? activeFilterTags.filter(t=>t!==tag) : [...activeFilterTags, tag];
+  renderHubContent();
+}
+
+async function createHub() {
+  const name = document.getElementById('new-hub-name').value.trim();
+  const label = document.getElementById('new-hub-label').value.trim();
+  if (!name) return showToast('Please enter a hub name', 'error');
+  const { data, error } = await sb.from('hubs').insert({ owner_id: currentUser.id, name, label }).select().single();
+  if (error) return showToast(error.message, 'error');
+  currentHub = data;
+  await renderHubTab();
+  showToast('Hub created!');
+}
+
+async function toggleDiscoverable() {
+  const newVal = !currentHub.is_discoverable;
+  await sb.from('hubs').update({ is_discoverable: newVal }).eq('id', currentHub.id);
+  currentHub.is_discoverable = newVal;
+  renderHubContent();
+  showToast(newVal ? 'Hub is now discoverable' : 'Hub is now hidden');
+}
+
+// ── HUB SETTINGS ──────────────────────────────────────────────────────────────
+function openHubModal() {
+  document.getElementById('hub-name-input').value = currentHub.name || '';
+  document.getElementById('hub-label-input').value = currentHub.label || '';
+  document.getElementById('hub-modal').style.display = 'flex';
+}
+function closeHubModal(e) {
+  if (!e || e.target === document.getElementById('hub-modal')) document.getElementById('hub-modal').style.display = 'none';
+}
+async function saveHubSettings() {
+  const name = document.getElementById('hub-name-input').value.trim();
+  const label = document.getElementById('hub-label-input').value.trim();
+  if (!name) return showToast('Hub name is required', 'error');
+  await sb.from('hubs').update({ name, label }).eq('id', currentHub.id);
+  currentHub.name = name; currentHub.label = label;
+  closeHubModal();
+  renderHubContent();
+  showToast('Hub settings saved');
+}
+
+// ── ITEM MODAL ────────────────────────────────────────────────────────────────
+function openItemModal(itemId) {
+  editingItemId = itemId || null;
+  currentTags = [];
+  currentImage = null;
+  document.getElementById('item-modal-title').textContent = itemId ? 'Edit Item' : 'Add Item';
+  document.getElementById('item-name').value = '';
+  document.getElementById('item-code').value = '';
+  document.getElementById('tag-input').value = '';
+  document.getElementById('tags-list').innerHTML = '';
+  document.getElementById('item-form-alert').innerHTML = '';
+  document.getElementById('upload-area').style.display = 'block';
+  document.getElementById('preview-area').style.display = 'none';
+  document.getElementById('uzone').classList.remove('drag');
+
+  if (itemId) {
+    const item = currentItems.find(i => i.id === itemId);
+    if (item) {
+      document.getElementById('item-name').value = item.name;
+      document.getElementById('item-code').value = item.product_code || '';
+      currentTags = [...(item.tags || [])];
+      renderTagsList();
+      if (item.image_url) {
+        currentImage = item.image_url;
+        document.getElementById('img-preview').src = item.image_url;
+        document.getElementById('upload-area').style.display = 'none';
+        document.getElementById('preview-area').style.display = 'block';
+      }
+    }
+  }
+  document.getElementById('item-modal').style.display = 'flex';
+}
+function closeItemModal(e) {
+  if (!e || e.target === document.getElementById('item-modal')) document.getElementById('item-modal').style.display = 'none';
+}
+function handleFile(file) {
+  if (!file || !file.type.startsWith('image/')) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    currentImage = e.target.result;
+    document.getElementById('img-preview').src = currentImage;
+    document.getElementById('upload-area').style.display = 'none';
+    document.getElementById('preview-area').style.display = 'block';
+    document.getElementById('uzone').classList.remove('drag');
+  };
+  reader.readAsDataURL(file);
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uzone').classList.remove('drag');
+  handleFile(e.dataTransfer.files[0]);
+}
+function removeImage() {
+  currentImage = null;
+  document.getElementById('upload-area').style.display = 'block';
+  document.getElementById('preview-area').style.display = 'none';
+}
+function addTag() {
+  const input = document.getElementById('tag-input');
+  const tag = input.value.trim().toLowerCase().replace(/\s+/g, '-');
+  if (tag && !currentTags.includes(tag)) { currentTags.push(tag); renderTagsList(); }
+  input.value = '';
+}
+function removeTag(tag) {
+  currentTags = currentTags.filter(t => t !== tag);
+  renderTagsList();
+}
+function renderTagsList() {
+  document.getElementById('tags-list').innerHTML = currentTags.map(t =>
+    `<span class="tpill">${t}<button onclick="removeTag('${t}')">✕</button></span>`).join('');
+}
+async function saveItem() {
+  const name = document.getElementById('item-name').value.trim();
+  if (!name) return showAlert('item-form-alert', 'Please enter an item name.', 'error');
+  const code = document.getElementById('item-code').value.trim();
+  const data = { hub_id: currentHub.id, name, product_code: code, tags: currentTags, image_url: currentImage };
+  if (editingItemId) {
+    const { error } = await sb.from('items').update(data).eq('id', editingItemId);
+    if (error) return showAlert('item-form-alert', error.message, 'error');
+    showToast('Item updated');
+  } else {
+    const { error } = await sb.from('items').insert(data);
+    if (error) return showAlert('item-form-alert', error.message, 'error');
+    showToast('Item added');
+  }
+  closeItemModal();
+  const { data: items } = await sb.from('items').select('*').eq('hub_id', currentHub.id).order('created_at', { ascending: false });
+  currentItems = items || [];
+  renderHubContent();
+}
+async function deleteItem(id) {
+  if (!confirm('Remove this item?')) return;
+  await sb.from('items').delete().eq('id', id);
+  currentItems = currentItems.filter(i => i.id !== id);
+  renderHubContent();
+  showToast('Item removed');
+}
+
+// ── LIGHTBOX ──────────────────────────────────────────────────────────────────
+function openLightbox(itemId) {
+  const allItems = window._browseItems || currentItems;
+  const item = allItems.find(i => i.id === itemId);
+  if (!item) return;
+  document.getElementById('lbox-name').textContent = item.name;
+  document.getElementById('lbox-owner').textContent = item.owner_name ? `by ${item.owner_name}` : '';
+  const img = document.getElementById('lbox-img');
+  if (item.image_url) { img.src = item.image_url; img.style.display = 'block'; } else { img.style.display = 'none'; }
+  document.getElementById('lbox-tags').innerHTML = (item.tags||[]).map(t =>
+    `<span class="chip" style="background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.35);color:#fff">${t}</span>`).join('');
+  document.getElementById('lightbox').style.display = 'flex';
+}
+function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; }
+
+
+// ── BULK UPLOAD ───────────────────────────────────────────────────────────────
+let parsedCsvItems = [];
+
+function openBulkModal() {
+  parsedCsvItems = [];
+  document.getElementById('bulk-tag').value = '';
+  document.getElementById('bulk-alert').innerHTML = '';
+  document.getElementById('csv-preview').style.display = 'none';
+  document.getElementById('bulk-save-btn').style.display = 'none';
+  document.getElementById('csv-zone').classList.remove('drag');
+  document.getElementById('csv-input').value = '';
+  document.getElementById('bulk-modal').style.display = 'flex';
+}
+function closeBulkModal(e) {
+  if (!e || e.target === document.getElementById('bulk-modal'))
+    document.getElementById('bulk-modal').style.display = 'none';
+}
+
+function downloadTemplate() {
+  const csv = 'Product Name,Product Code\nExample Product,EX-001\nAnother Product,EX-002\n';
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'mystockhub-template.csv'; a.click();
+  URL.revokeObjectURL(url);
+  showToast('Template downloaded');
+}
+
+function handleCsvDrop(e) {
+  e.preventDefault();
+  document.getElementById('csv-zone').classList.remove('drag');
+  handleCsvFile(e.dataTransfer.files[0]);
+}
+
+function handleCsvFile(file) {
+  if (!file || !file.name.endsWith('.csv')) return showAlert('bulk-alert', 'Please upload a .csv file.', 'error');
+  const reader = new FileReader();
+  reader.onload = e => parseCsv(e.target.result);
+  reader.readAsText(file);
+}
+
+function parseCsv(text) {
+  const lines = text.trim().split('\n').filter(l => l.trim());
+  if (lines.length < 2) return showAlert('bulk-alert', 'CSV must have a header row and at least one product.', 'error');
+  const header = lines[0].toLowerCase().split(',').map(h => h.trim().replace(/"/g,''));
+  const nameIdx = header.findIndex(h => h.includes('name'));
+  const codeIdx = header.findIndex(h => h.includes('code'));
+  if (nameIdx === -1) return showAlert('bulk-alert', 'CSV must have a "Product Name" column.', 'error');
+  
+  parsedCsvItems = [];
+  const tbody = document.getElementById('csv-table-body');
+  tbody.innerHTML = '';
+  
+  for (let i = 1; i < lines.length; i++) {
+    const cols = lines[i].split(',').map(c => c.trim().replace(/"/g,''));
+    const name = cols[nameIdx] || '';
+    const code = codeIdx !== -1 ? (cols[codeIdx] || '') : '';
+    if (!name) continue;
+    parsedCsvItems.push({ name, product_code: code });
+    const valid = name.length > 0;
+    tbody.innerHTML += `<tr style="border-top:1px solid var(--pinkmid)">
+      <td style="padding:7px 12px;font-weight:600;color:var(--navy)">${name}</td>
+      <td style="padding:7px 12px;color:var(--dimp)">${code || '—'}</td>
+      <td style="padding:7px 12px"><span style="color:${valid?'var(--success)':'var(--danger)'};font-weight:700;font-size:11px">${valid?'✓ Ready':'✗ No name'}</span></td>
+    </tr>`;
+  }
+  
+  document.getElementById('csv-count').textContent = `${parsedCsvItems.length} item${parsedCsvItems.length===1?'':'s'} ready to import`;
+  document.getElementById('csv-preview').style.display = 'block';
+  document.getElementById('bulk-save-btn').style.display = parsedCsvItems.length > 0 ? 'block' : 'none';
+  document.getElementById('bulk-alert').innerHTML = '';
+}
+
+async function saveBulkItems() {
+  if (!parsedCsvItems.length) return;
+  const sharedTag = document.getElementById('bulk-tag').value.trim().toLowerCase().replace(/\s+/g,'-');
+  const btn = document.getElementById('bulk-save-btn');
+  btn.textContent = 'Uploading…'; btn.disabled = true;
+  
+  const itemsToInsert = parsedCsvItems.map(item => ({
+    hub_id: currentHub.id,
+    name: item.name,
+    product_code: item.product_code || null,
+    tags: sharedTag ? [sharedTag] : [],
+    image_url: null
+  }));
+  
+  const { error } = await sb.from('items').insert(itemsToInsert);
+  if (error) {
+    btn.textContent = 'Upload All Items'; btn.disabled = false;
+    return showAlert('bulk-alert', error.message, 'error');
+  }
+  
+  closeBulkModal();
+  const { data: items } = await sb.from('items').select('*').eq('hub_id', currentHub.id).order('created_at', { ascending: false });
+  currentItems = items || [];
+  renderHubContent();
+  showToast(`${parsedCsvItems.length} items uploaded successfully`);
+  btn.textContent = 'Upload All Items'; btn.disabled = false;
+}
+
+// ── BROWSE TAB ────────────────────────────────────────────────────────────────
+async function renderBrowseTab() {
+  const el = document.getElementById('browse-content');
+  el.innerHTML = `
+    <h2 class="section-title">Browse Hubs</h2>
+    <div class="browse-filters">
+      <div class="fg"><label class="fl">Search items or tags</label><input class="fi" id="browse-search" placeholder="e.g. fabric, blue, canvas…" oninput="debouncedBrowseSearch()"/></div>
+      <div class="fg"><label class="fl">Country</label>
+        <select class="fi" id="browse-country">
+          <option value="">All countries</option>
+          <option>Australia</option><option>Canada</option><option>France</option><option>Germany</option>
+          <option>Ireland</option><option>Italy</option><option>New Zealand</option><option>South Africa</option>
+          <option>Spain</option><option>United Kingdom</option><option>United States</option><option>Other</option>
+        </select>
+      </div>
+      <div class="fg"><label class="fl">State / Region</label><input class="fi" id="browse-state" placeholder="Any"/></div>
+      <div class="fg"><label class="fl">Town / City</label><input class="fi" id="browse-town" placeholder="Any"/></div>
+      <button class="btn btn-p btn-sm" style="width:auto;margin-top:0" onclick="searchHubs()">Search</button>
+    </div>
+    <div id="browse-results"></div>`;
+  await searchHubs();
+}
+
+async function searchHubs() {
+  const el = document.getElementById('browse-results');
+  el.innerHTML = '<div class="empty"><div class="spinner"></div></div>';
+  const q = (document.getElementById('browse-search')?.value||'').trim().toLowerCase();
+  const country = document.getElementById('browse-country')?.value||'';
+  const state = (document.getElementById('browse-state')?.value||'').trim().toLowerCase();
+  const town = (document.getElementById('browse-town')?.value||'').trim().toLowerCase();
+
+  let hubQuery = sb.from('hubs').select('*, profiles(full_name, country, state, town)').eq('is_discoverable', true);
+  const { data: hubs } = await hubQuery;
+  if (!hubs || hubs.length === 0) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><h3>No hubs found</h3><p>No hubs are discoverable yet.</p></div>';
+    return;
+  }
+  const filteredHubs = hubs.filter(h => {
+    const p = h.profiles || {};
+    if (country && p.country !== country) return false;
+    if (state && !(p.state||'').toLowerCase().includes(state)) return false;
+    if (town && !(p.town||'').toLowerCase().includes(town)) return false;
+    return true;
+  });
+  if (filteredHubs.length === 0) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><h3>No hubs match your filters</h3><p>Try broader search criteria.</p></div>';
+    return;
+  }
+  const hubIds = filteredHubs.map(h => h.id);
+  let itemQuery = sb.from('items').select('*').in('hub_id', hubIds);
+  const { data: allItems } = await itemQuery;
+  let items = allItems || [];
+  if (q) items = items.filter(i => i.name.toLowerCase().includes(q) || (i.tags||[]).some(t => t.toLowerCase().includes(q)));
+  items = items.map(i => {
+    const hub = filteredHubs.find(h => h.id === i.hub_id);
+    return { ...i, owner_name: hub?.profiles?.full_name || '', hub_name: hub?.name || '' };
+  });
+  window._browseItems = items;
+  if (items.length === 0) {
+    el.innerHTML = `<div class="empty"><div class="empty-icon">📦</div><h3>No items found</h3><p>Try a different search term.</p></div>`;
+    return;
+  }
+  el.innerHTML = `<p class="cnt" style="margin-bottom:16px">${items.length} item${items.length===1?'':'s'} found across ${filteredHubs.length} hub${filteredHubs.length===1?'':'s'}</p><div class="grid">${items.map(i => renderItemCard(i, false)).join('')}</div>`;
+}
+
+// ── PROFILE TAB ───────────────────────────────────────────────────────────────
+function renderProfileTab() {
+  const p = currentProfile || {};
+  document.getElementById('profile-content').innerHTML = `
+    <div class="profile-card">
+      <h2>My Profile</h2>
+      <div id="profile-alert"></div>
+      <div class="form-row">
+        <div class="fg"><label class="fl">Full Name</label><input class="fi" id="p-name" value="${p.full_name||''}"/></div>
+        <div class="fg"><label class="fl">Account Type</label><input class="fi" value="${p.account_type==='owner'?'Hub Owner':'Viewer'}" disabled style="opacity:0.6"/></div>
+      </div>
+      <div class="fg"><label class="fl">Email</label><input class="fi" value="${p.email||''}" disabled style="opacity:0.6"/></div>
+      <div class="fg"><label class="fl">Country</label>
+        <select class="fi" id="p-country">
+          <option value="">Select country…</option>
+          <option ${p.country==='Australia'?'selected':''}>Australia</option>
+          <option ${p.country==='Canada'?'selected':''}>Canada</option>
+          <option ${p.country==='France'?'selected':''}>France</option>
+          <option ${p.country==='Germany'?'selected':''}>Germany</option>
+          <option ${p.country==='Ireland'?'selected':''}>Ireland</option>
+          <option ${p.country==='Italy'?'selected':''}>Italy</option>
+          <option ${p.country==='New Zealand'?'selected':''}>New Zealand</option>
+          <option ${p.country==='South Africa'?'selected':''}>South Africa</option>
+          <option ${p.country==='Spain'?'selected':''}>Spain</option>
+          <option ${p.country==='United Kingdom'?'selected':''}>United Kingdom</option>
+          <option ${p.country==='United States'?'selected':''}>United States</option>
+          <option ${p.country==='Other'?'selected':''}>Other</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label class="fl">State / Region</label><input class="fi" id="p-state" value="${p.state||''}"/></div>
+        <div class="fg"><label class="fl">Town / City</label><input class="fi" id="p-town" value="${p.town||''}"/></div>
+      </div>
+      <button class="btn btn-p" style="margin-top:8px" onclick="saveProfile()">Save Changes</button>
+      <div style="margin-top:20px;padding-top:20px;border-top:2px solid var(--pinkbg)">
+        <p style="font-size:13px;font-weight:600;color:var(--dimp);margin-bottom:12px">Need to change your password? We'll send a reset link to your email.</p>
+        <button class="btn btn-g" style="width:auto" onclick="sendPasswordReset()">Send Password Reset Email</button>
+      </div>
+    </div>`;
+}
+async function saveProfile() {
+  const name = document.getElementById('p-name').value.trim();
+  const country = document.getElementById('p-country').value;
+  const state = document.getElementById('p-state').value.trim();
+  const town = document.getElementById('p-town').value.trim();
+  const { error } = await sb.from('profiles').update({ full_name: name, country, state, town }).eq('id', currentUser.id);
+  if (error) return showAlert('profile-alert', error.message, 'error');
+  currentProfile = { ...currentProfile, full_name: name, country, state, town };
+  updateHeader();
+  showAlert('profile-alert', 'Profile saved!', 'success');
+  showToast('Profile updated');
+}
+async function sendPasswordReset() {
+  const { error } = await sb.auth.resetPasswordForEmail(currentUser.email, { redirectTo: 'https://mystockhub.netlify.app' });
+  if (error) return showToast(error.message, 'error');
+  showToast('Reset email sent — check your inbox');
+}
+
+// ── TOAST ──────────────────────────────────────────────────────────────────────
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = type || '';
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2800);
+}
+
+// ── KEYBOARD ──────────────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeLightbox(); closeItemModal(); closeHubModal(); } });
+
+init();
+</script>
+</body>
+</html>
