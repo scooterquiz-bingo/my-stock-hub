@@ -784,11 +784,7 @@ function clearAllFilters() {
   renderHubContent();
 }
 
-let browseDebounceTimer = null;
-function debouncedBrowseSearch() {
-  clearTimeout(browseDebounceTimer);
-  browseDebounceTimer = setTimeout(() => searchHubs(), 300);
-}
+
 function toggleFilterTag(tag) {
   activeFilterTags = activeFilterTags.includes(tag) ? activeFilterTags.filter(t=>t!==tag) : [...activeFilterTags, tag];
   updateHubDynamic();
