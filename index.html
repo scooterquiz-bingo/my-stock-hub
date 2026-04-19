@@ -1110,7 +1110,7 @@ async function renderBrowseTab() {
   el.innerHTML = `
     <h2 class="section-title">Browse Hubs</h2>
     <div class="browse-filters">
-      <div class="fg"><label class="fl">Search items or tags</label><input class="fi" id="browse-search" placeholder="e.g. fabric, blue, canvas…" oninput="debouncedBrowseSearch()"/></div>
+      <div class="fg"><label class="fl">Search items or tags</label><input class="fi" id="browse-search" placeholder="e.g. fabric, blue, canvas…"/></div>
       <div class="fg"><label class="fl">Country</label>
         <select class="fi" id="browse-country">
           <option value="">All countries</option>
@@ -1123,14 +1123,25 @@ async function renderBrowseTab() {
       <div class="fg"><label class="fl">Town / City</label><input class="fi" id="browse-town" placeholder="Any"/></div>
       <div class="fg" style="justify-content:flex-end;margin-bottom:0">
         <label style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--navy);cursor:pointer;white-space:nowrap">
-          <input type="checkbox" id="browse-untagged" style="width:16px;height:16px;accent-color:var(--mag)" onchange="searchHubs()"/>
+          <input type="checkbox" id="browse-untagged" style="width:16px;height:16px;accent-color:var(--mag)"/>
           Show untagged only
         </label>
       </div>
       <button class="btn btn-p btn-sm" style="width:auto;margin-top:0" onclick="searchHubs()">Search</button>
     </div>
-    <div id="browse-results"></div>`;
-  await searchHubs();
+    <div id="browse-results">
+      <div class="empty">
+        <div class="empty-icon">🔍</div>
+        <h3>Search to discover items</h3>
+        <p>Enter a keyword, tag or location above and hit Search to browse across all hubs.</p>
+      </div>
+    </div>`;
+
+  // Allow Enter key in search box to trigger search
+  const browseInput = document.getElementById('browse-search');
+  if (browseInput) {
+    browseInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchHubs(); });
+  }
 }
 
 async function searchHubs() {
@@ -1142,7 +1153,9 @@ async function searchHubs() {
   const town = (document.getElementById('browse-town')?.value||'').trim().toLowerCase();
 
   let hubQuery = sb.from('hubs').select('*, profiles(full_name, country, state, town)').eq('is_discoverable', true);
-  const { data: hubs } = await hubQuery;
+  const { data: allHubs } = await hubQuery;
+  // Exclude the current user's own hub from browse results
+  const hubs = (allHubs || []).filter(h => h.owner_id !== currentUser?.id);
   if (!hubs || hubs.length === 0) {
     el.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><h3>No hubs found</h3><p>No hubs are discoverable yet.</p></div>';
     return;
