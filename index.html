@@ -770,6 +770,9 @@ function clearAllFilters() {
   showUntagged = false;
   const input = document.getElementById('hub-search-input');
   if (input) input.value = '';
+  // Force full rebuild
+  const grid = document.getElementById('items-grid');
+  if (grid) grid.closest('#hub-content').innerHTML = '';
   renderHubContent();
 }
 
