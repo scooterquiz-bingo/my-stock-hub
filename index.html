@@ -440,7 +440,7 @@
         <span style="font-size:18px">📋</span>
         <div>
           <p style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px">How bulk upload works</p>
-          <p style="font-size:12px;font-weight:500;color:var(--dimp);line-height:1.6">Download the CSV template, fill in your product names and codes, then upload it back. All items will be created with your shared tag. You can add images and extra tags to each item afterwards.</p>
+          <p style="font-size:12px;font-weight:500;color:var(--dimp);line-height:1.6">Download the CSV template and fill in product names, codes and up to 5 tags per item. Use Tag 1 for a shared range tag, then add specific tags in columns 2–5. Leave unused tag columns blank. The shared tag field above applies to every item in the batch on top of any CSV tags. Images can be added per item afterwards.</p>
         </div>
       </div>
 
@@ -505,6 +505,7 @@ let currentTags = [];
 let currentImage = null;
 let activeFilterTags = [];
 let searchQuery = '';
+let showUntagged = false;
 let selectedAccountType = 'viewer';
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
@@ -687,7 +688,8 @@ function renderHubContent() {
       <div class="srch"><span class="srch-icon">🔍</span><input id="hub-search-input" placeholder="Search items or tags…" oninput="hubSearchLive(this.value)" value="${searchQuery}"/></div>
       ${allTags.length ? `<div class="tagbar">${allTags.map(t => `<button class="ftag ${activeFilterTags.includes(t)?'on':''}" onclick="toggleFilterTag('${t}')">${t}</button>`).join('')}</div>` : ''}
       <span class="cnt">${filtered.length} / ${currentItems.length} items</span>
-      ${(activeFilterTags.length > 0 || searchQuery) ? '<button class="clear-btn" onclick="clearAllFilters()">✕ Clear filters</button>' : ''}
+      <button class="ftag ${showUntagged ? 'on' : ''}" onclick="toggleUntagged()" style="background:${showUntagged?'var(--navy)':'rgba(255,255,255,0.65)'};border-color:${showUntagged?'var(--navy)':'var(--mag2)'};color:${showUntagged?'#fff':'var(--mag2)'}">⚠ No tags</button>
+      ${(activeFilterTags.length > 0 || searchQuery || showUntagged) ? '<button class="clear-btn" onclick="clearAllFilters()">✕ Clear filters</button>' : ''}
       <button class="add-btn" onclick="openItemModal()">＋ Add Item</button>
       <button class="add-btn" style="background:var(--navy2)" onclick="openBulkModal()">⬆ Bulk Upload</button>
     </div>
@@ -737,7 +739,8 @@ function filterItems(items) {
       (i.tags||[]).some(t => fuzzyMatch(t, q));
     const matchTags = activeFilterTags.length === 0 ||
       activeFilterTags.every(t => (i.tags||[]).includes(t));
-    return matchSearch && matchTags;
+    const matchUntagged = !showUntagged || !i.tags || i.tags.length === 0;
+    return matchSearch && matchTags && matchUntagged;
   });
 }
 
@@ -753,9 +756,18 @@ function hubSearchLive(val) {
   renderHubContent();
 }
 
+function toggleUntagged() {
+  showUntagged = !showUntagged;
+  activeFilterTags = [];
+  searchQuery = '';
+  const input = document.getElementById('hub-search-input');
+  if (input) input.value = '';
+  renderHubContent();
+}
 function clearAllFilters() {
   searchQuery = '';
   activeFilterTags = [];
+  showUntagged = false;
   const input = document.getElementById('hub-search-input');
   if (input) input.value = '';
   renderHubContent();
@@ -943,7 +955,7 @@ function closeBulkModal(e) {
 }
 
 function downloadTemplate() {
-  const csv = 'Product Name,Product Code\nExample Product,EX-001\nAnother Product,EX-002\n';
+  const csv = 'Product Name,Product Code,Tag 1,Tag 2,Tag 3,Tag 4,Tag 5\nExample Product,EX-001,autumn,paper,red,,\nAnother Product,EX-002,autumn,,,, \n';
   const blob = new Blob([csv], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -971,22 +983,40 @@ function parseCsv(text) {
   const header = lines[0].toLowerCase().split(',').map(h => h.trim().replace(/"/g,''));
   const nameIdx = header.findIndex(h => h.includes('name'));
   const codeIdx = header.findIndex(h => h.includes('code'));
+  // Find all tag columns (tag 1, tag 2, tag 3, tag 4, tag 5)
+  const tagIdxs = header.reduce((acc, h, i) => { if (h.includes('tag')) acc.push(i); return acc; }, []);
   if (nameIdx === -1) return showAlert('bulk-alert', 'CSV must have a "Product Name" column.', 'error');
   
   parsedCsvItems = [];
   const tbody = document.getElementById('csv-table-body');
   tbody.innerHTML = '';
+
+  // Handle CSV lines respecting quoted fields
+  function parseCsvLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      if (line[i] === '"') { inQuotes = !inQuotes; continue; }
+      if (line[i] === ',' && !inQuotes) { result.push(current.trim()); current = ''; continue; }
+      current += line[i];
+    }
+    result.push(current.trim());
+    return result;
+  }
   
   for (let i = 1; i < lines.length; i++) {
-    const cols = lines[i].split(',').map(c => c.trim().replace(/"/g,''));
+    const cols = parseCsvLine(lines[i]);
     const name = cols[nameIdx] || '';
     const code = codeIdx !== -1 ? (cols[codeIdx] || '') : '';
+    const itemTags = tagIdxs.map(ti => (cols[ti] || '').trim().toLowerCase().replace(/\s+/g,'-')).filter(Boolean);
     if (!name) continue;
-    parsedCsvItems.push({ name, product_code: code });
+    parsedCsvItems.push({ name, product_code: code, tags: itemTags });
     const valid = name.length > 0;
     tbody.innerHTML += `<tr style="border-top:1px solid var(--pinkmid)">
       <td style="padding:7px 12px;font-weight:600;color:var(--navy)">${name}</td>
       <td style="padding:7px 12px;color:var(--dimp)">${code || '—'}</td>
+      <td style="padding:7px 12px;color:var(--dimp);font-size:11px">${itemTags.length ? itemTags.join(', ') : '—'}</td>
       <td style="padding:7px 12px"><span style="color:${valid?'var(--success)':'var(--danger)'};font-weight:700;font-size:11px">${valid?'✓ Ready':'✗ No name'}</span></td>
     </tr>`;
   }
@@ -1003,13 +1033,17 @@ async function saveBulkItems() {
   const btn = document.getElementById('bulk-save-btn');
   btn.textContent = 'Uploading…'; btn.disabled = true;
   
-  const itemsToInsert = parsedCsvItems.map(item => ({
-    hub_id: currentHub.id,
-    name: item.name,
-    product_code: item.product_code || null,
-    tags: sharedTag ? [sharedTag] : [],
-    image_url: null
-  }));
+  const itemsToInsert = parsedCsvItems.map(item => {
+    const allTags = [...(item.tags || [])];
+    if (sharedTag && !allTags.includes(sharedTag)) allTags.unshift(sharedTag);
+    return {
+      hub_id: currentHub.id,
+      name: item.name,
+      product_code: item.product_code || null,
+      tags: allTags,
+      image_url: null
+    };
+  });
   
   const { error } = await sb.from('items').insert(itemsToInsert);
   if (error) {
@@ -1042,6 +1076,12 @@ async function renderBrowseTab() {
       </div>
       <div class="fg"><label class="fl">State / Region</label><input class="fi" id="browse-state" placeholder="Any"/></div>
       <div class="fg"><label class="fl">Town / City</label><input class="fi" id="browse-town" placeholder="Any"/></div>
+      <div class="fg" style="justify-content:flex-end;margin-bottom:0">
+        <label style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--navy);cursor:pointer;white-space:nowrap">
+          <input type="checkbox" id="browse-untagged" style="width:16px;height:16px;accent-color:var(--mag)" onchange="searchHubs()"/>
+          Show untagged only
+        </label>
+      </div>
       <button class="btn btn-p btn-sm" style="width:auto;margin-top:0" onclick="searchHubs()">Search</button>
     </div>
     <div id="browse-results"></div>`;
@@ -1077,7 +1117,9 @@ async function searchHubs() {
   let itemQuery = sb.from('items').select('*').in('hub_id', hubIds);
   const { data: allItems } = await itemQuery;
   let items = allItems || [];
-  if (q) items = items.filter(i => i.name.toLowerCase().includes(q) || (i.tags||[]).some(t => t.toLowerCase().includes(q)));
+  const browseUntagged = document.getElementById('browse-untagged')?.checked;
+  if (q) items = items.filter(i => fuzzyMatch(i.name, q) || (i.tags||[]).some(t => fuzzyMatch(t, q)));
+  if (browseUntagged) items = items.filter(i => !i.tags || i.tags.length === 0);
   items = items.map(i => {
     const hub = filteredHubs.find(h => h.id === i.hub_id);
     return { ...i, owner_name: hub?.profiles?.full_name || '', hub_name: hub?.name || '' };
