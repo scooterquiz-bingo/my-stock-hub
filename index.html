@@ -955,11 +955,49 @@ function closeBulkModal(e) {
 }
 
 function downloadTemplate() {
-  const csv = 'Product Name,Product Code,Tag 1,Tag 2,Tag 3,Tag 4,Tag 5\nExample Product,EX-001,autumn,paper,red,,\nAnother Product,EX-002,autumn,,,, \n';
-  const blob = new Blob([csv], { type: 'text/csv' });
+  // Build 20-row CSV (2 examples + 18 blank)
+  const headers = 'Product Name,Product Code,Tag 1,Tag 2,Tag 3,Tag 4,Tag 5';
+  const row1 = 'Example Product Name,EX-001,autumn,paper,red,,';
+  const row2 = 'Another Example Product,EX-002,autumn,,,,'
+  const blankRow = ',,,,,,'
+  const blankRows = Array(18).fill(blankRow).join('\n');
+  const csv = [headers, row1, row2, blankRows].join('\n');
+
+  // Generate as an HTML file that opens in Excel with column widths set
+  const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="UTF-8">
+<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>
+<x:Name>My Stock Hub</x:Name>
+<x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>
+</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+<style>
+  td { mso-number-format:"@"; font-family: Calibri, Arial, sans-serif; font-size: 11pt; padding: 4px 8px; }
+  th { background: #c0006a; color: white; font-weight: bold; font-family: Calibri, Arial, sans-serif; font-size: 11pt; padding: 4px 8px; mso-number-format:"@"; }
+  .ex { background: #fdf0f5; color: #5a1858; font-style: italic; }
+  col.wide { mso-width-source: userset; mso-width-alt: 6400; width: 220pt; }
+  col.med { mso-width-source: userset; mso-width-alt: 3200; width: 120pt; }
+  col.tag { mso-width-source: userset; mso-width-alt: 3200; width: 120pt; }
+</style>
+</head><body>
+<table border="1" style="border-collapse:collapse">
+  <colgroup>
+    <col class="wide"/>
+    <col class="med"/>
+    <col class="tag"/><col class="tag"/><col class="tag"/><col class="tag"/><col class="tag"/>
+  </colgroup>
+  <tr>
+    <th>Product Name</th><th>Product Code</th>
+    <th>Tag 1</th><th>Tag 2</th><th>Tag 3</th><th>Tag 4</th><th>Tag 5</th>
+  </tr>
+  <tr class="ex"><td>Example Product Name</td><td>EX-001</td><td>autumn</td><td>paper</td><td>red</td><td></td><td></td></tr>
+  <tr class="ex"><td>Another Example Product</td><td>EX-002</td><td>autumn</td><td></td><td></td><td></td><td></td></tr>
+  ${Array(18).fill('<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>').join('')}
+</table></body></html>`;
+
+  const blob = new Blob([html], { type: 'application/vnd.ms-excel;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = 'mystockhub-template.csv'; a.click();
+  a.href = url; a.download = 'mystockhub-template.xls'; a.click();
   URL.revokeObjectURL(url);
   showToast('Template downloaded');
 }
