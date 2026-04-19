@@ -459,7 +459,16 @@ async function loadUser(user) {
   currentUser = user;
   let { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
   if (!profile) {
-    await sb.from('profiles').insert({ id: user.id, email: user.email, account_type: 'viewer' });
+    const meta = user.user_metadata || {};
+    await sb.from('profiles').insert({
+      id: user.id,
+      email: user.email,
+      account_type: meta.account_type || 'viewer',
+      full_name: meta.full_name || '',
+      country: meta.country || '',
+      state: meta.state || '',
+      town: meta.town || ''
+    });
     ({ data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single());
   }
   currentProfile = profile;
@@ -467,7 +476,10 @@ async function loadUser(user) {
   if (profile.account_type === 'owner') {
     const { data: hub } = await sb.from('hubs').select('*').eq('owner_id', user.id).single();
     currentHub = hub;
+    document.getElementById('tab-hub-btn').style.display = '';
+    document.getElementById('nav-hub').style.display = '';
     showScreen('app');
+    switchTab('hub');
     await renderHubTab();
   } else {
     showScreen('app');
@@ -531,7 +543,7 @@ async function handleRegister() {
   document.getElementById('register-alert').innerHTML = '';
   if (!email || !password || !firstname || !lastname) return showAlert('register-alert', 'Please fill in all required fields.', 'error');
   if (password.length < 6) return showAlert('register-alert', 'Password must be at least 6 characters.', 'error');
-  const { data, error } = await sb.auth.signUp({ email, password });
+  const { data, error } = await sb.auth.signUp({ email, password, options: { data: { account_type: selectedAccountType, full_name: `${firstname} ${lastname}`, country, state, town } } });
   if (error) return showAlert('register-alert', error.message, 'error');
   if (data.user) {
     await sb.from('profiles').upsert({
