@@ -545,14 +545,12 @@ async function loadUser(user) {
   if (profile.account_type === 'owner') {
     const { data: hub } = await sb.from('hubs').select('*').eq('owner_id', user.id).single();
     currentHub = hub;
-    document.getElementById('tab-hub-btn').style.display = '';
     document.getElementById('nav-hub').style.display = '';
     showScreen('app');
     switchTab('hub');
     await renderHubTab();
   } else {
     showScreen('app');
-    document.getElementById('tab-hub-btn').style.display = 'none';
     document.getElementById('nav-hub').style.display = 'none';
     switchTab('browse');
     await renderBrowseTab();
