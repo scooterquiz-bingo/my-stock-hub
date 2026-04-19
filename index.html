@@ -19,15 +19,11 @@
     *{-webkit-font-smoothing:antialiased}
     body{background:var(--pinkbg);color:var(--topp);font-family:'Inter',sans-serif;font-size:14px;font-weight:500;min-height:100vh}
     h1,h2,h3{font-family:'Playfair Display',serif;font-weight:700}
-
-    /* LOADING */
     #loading{display:flex;align-items:center;justify-content:center;min-height:100vh;flex-direction:column;gap:16px}
     .spinner{width:40px;height:40px;border:3px solid var(--pinkmid);border-top-color:var(--mag);border-radius:50%;animation:spin 0.8s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
-
-    /* AUTH */
     #auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-    .auth-card{background:#fff;border:2px solid var(--pinkmid);border-radius:16px;padding:40px;width:100%;max-width:460px;box-shadow:0 20px 60px rgba(10,21,64,0.15)}
+    .auth-card{background:#fff;border:2px solid var(--pinkmid);border-radius:16px;padding:40px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(10,21,64,0.15)}
     .auth-logo{display:flex;align-items:center;gap:12px;margin-bottom:28px}
     .auth-logo-icon{background:var(--navy);border-radius:10px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:#ff70b0;font-size:22px}
     .auth-logo h1{font-size:22px;color:var(--navy);letter-spacing:0.04em}
@@ -47,63 +43,69 @@
     .btn-p:disabled{opacity:0.6;cursor:not-allowed}
     .btn-g{background:transparent;border:2px solid var(--pinkdark);color:var(--dimp)}
     .btn-g:hover{border-color:var(--mag);color:var(--mag)}
+    .btn-n{background:var(--navy);color:#fff}
+    .btn-n:hover{background:var(--navy2)}
     .btn-sm{width:auto;padding:8px 16px;font-size:12px}
+    .btn-xs{width:auto;padding:5px 12px;font-size:11px}
     .auth-link{text-align:center;margin-top:16px;font-size:13px;color:var(--dimp);font-weight:500}
     .auth-link a{color:var(--mag);font-weight:700;cursor:pointer;text-decoration:none}
     .auth-link a:hover{text-decoration:underline}
     .auth-divider{display:flex;align-items:center;gap:12px;margin:16px 0}
     .auth-divider hr{flex:1;border:none;border-top:2px solid var(--pinkmid)}
     .auth-divider span{font-size:11px;font-weight:700;color:var(--pinkdark);text-transform:uppercase;letter-spacing:0.1em}
-    .account-type-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+    .type-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
     .type-card{border:2px solid var(--pinkmid);border-radius:8px;padding:14px;cursor:pointer;transition:all var(--t);text-align:center}
     .type-card:hover{border-color:var(--mag)}
     .type-card.selected{border-color:var(--mag);background:rgba(192,0,106,0.06)}
     .type-card h4{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:3px}
     .type-card p{font-size:11px;color:var(--dimp);font-weight:500}
-    .type-card .badge-free{display:inline-block;background:#007a40;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-bottom:6px;letter-spacing:0.05em}
-    .type-card .badge-paid{display:inline-block;background:var(--mag);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-bottom:6px;letter-spacing:0.05em}
-
-    /* APP HEADER */
+    .badge-free{display:inline-block;background:#007a40;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-bottom:6px}
+    .badge-paid{display:inline-block;background:var(--mag);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-bottom:6px}
+    /* HEADER */
     #app-screen{min-height:100vh;display:flex;flex-direction:column}
     .hdr{background:var(--navy);border-bottom:3px solid var(--mag);padding:0 48px;display:flex;align-items:center;justify-content:space-between;min-height:120px;position:sticky;top:0;z-index:100}
-    .brand{display:flex;align-items:center;gap:12px}
+    .brand{display:flex;align-items:center;gap:14px}
     .brand-icon{color:#ff70b0;font-size:32px}
     .brand h1{font-size:28px;color:#fff;letter-spacing:0.06em}
     .brand-sub{display:block;font-size:11px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#99aadd;margin-top:4px}
     .hdr-right{display:flex;align-items:center;gap:14px}
     .user-name{font-size:16px;font-weight:700;color:#fff}
     .user-type{font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#99aadd;margin-top:2px}
-    .hdr-btn{background:rgba(255,255,255,0.12);border:2px solid rgba(255,255,255,0.3);border-radius:20px;color:#fff;font-size:11px;font-weight:700;padding:6px 14px;cursor:pointer;transition:all var(--t);font-family:'Inter',sans-serif;letter-spacing:0.06em;text-transform:uppercase}
+    .hdr-btn{background:rgba(255,255,255,0.12);border:2px solid rgba(255,255,255,0.3);border-radius:20px;color:#fff;font-size:11px;font-weight:700;padding:6px 14px;cursor:pointer;transition:all var(--t);font-family:'Inter',sans-serif;letter-spacing:0.06em;text-transform:uppercase;position:relative}
     .hdr-btn:hover{background:rgba(255,255,255,0.22);border-color:rgba(255,255,255,0.6)}
-    .hdr-btn.active{background:var(--mag);border-color:var(--maglt)}
-
-    /* NAV TABS */
+    .hdr-btn .notif-dot{position:absolute;top:-3px;right:-3px;width:10px;height:10px;background:#ff4466;border-radius:50%;border:2px solid var(--navy)}
+    /* NAV */
     .nav-tabs{background:var(--pinkmid);border-bottom:2px solid var(--pinkdark);padding:0 28px;display:flex;gap:4px}
     .nav-tab{padding:12px 20px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all var(--t);color:var(--dimp)}
     .nav-tab:hover{color:var(--navy)}
     .nav-tab.active{color:var(--navy);border-bottom-color:var(--mag)}
-
-    /* MAIN CONTENT */
+    /* MAIN */
     .main{flex:1;padding:28px;max-width:1200px;margin:0 auto;width:100%}
-
     /* HUB SETUP */
     .hub-setup{background:#fff;border:2px solid var(--pinkmid);border-radius:12px;padding:40px;max-width:560px;margin:0 auto;text-align:center}
     .hub-setup h2{font-size:26px;color:var(--navy);margin-bottom:8px}
     .hub-setup p{font-size:13px;color:var(--dimp);font-weight:500;margin-bottom:28px;line-height:1.6}
     .hub-setup .fg{text-align:left}
-    .hub-setup .btn{margin-top:8px}
-
     /* HUB HEADER */
     .hub-hdr{background:#fff;border:2px solid var(--pinkmid);border-radius:12px;padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
     .hub-info h2{font-size:22px;color:var(--navy);margin-bottom:2px}
     .hub-info p{font-size:12px;color:var(--dimp);font-weight:500}
     .hub-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-    .discover-toggle{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--dimp)}
-    .toggle{width:36px;height:20px;background:var(--pinkmid);border-radius:10px;cursor:pointer;position:relative;transition:all var(--t);border:none;flex-shrink:0}
-    .toggle.on{background:var(--mag)}
-    .toggle::after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;background:#fff;border-radius:50%;transition:all var(--t)}
-    .toggle.on::after{left:19px}
-
+    .access-badge{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:0.06em}
+    .access-badge.open{background:rgba(0,122,64,0.12);color:var(--success);border:2px solid var(--success)}
+    .access-badge.restricted{background:rgba(192,0,106,0.1);color:var(--mag);border:2px solid var(--mag)}
+    /* CATEGORY SIDEBAR */
+    .hub-layout{display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:start}
+    .cat-sidebar{background:#fff;border:2px solid var(--pinkmid);border-radius:10px;overflow:hidden}
+    .cat-sidebar-hdr{background:var(--navy);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+    .cat-sidebar-hdr span{font-size:12px;font-weight:700;color:#fff;letter-spacing:0.08em;text-transform:uppercase}
+    .cat-item{padding:10px 16px;cursor:pointer;transition:all var(--t);border-bottom:1px solid var(--pinkbg);font-size:13px;font-weight:600;color:var(--topp)}
+    .cat-item:hover{background:var(--pinkbg)}
+    .cat-item.active{background:rgba(192,0,106,0.08);color:var(--mag);border-left:3px solid var(--mag)}
+    .cat-item.all{font-weight:700}
+    .subgroup-item{padding:8px 16px 8px 28px;cursor:pointer;transition:all var(--t);border-bottom:1px solid var(--pinkbg);font-size:12px;font-weight:500;color:var(--dimp)}
+    .subgroup-item:hover{background:var(--pinkbg);color:var(--topp)}
+    .subgroup-item.active{background:rgba(192,0,106,0.06);color:var(--mag)}
     /* TOOLBAR */
     .toolbar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
     .srch{flex:1;min-width:200px;display:flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--pinkdark);border-radius:var(--r);padding:9px 14px;transition:border-color var(--t)}
@@ -118,48 +120,50 @@
     .cnt{font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap}
     .add-btn{display:flex;align-items:center;gap:6px;padding:9px 18px;border-radius:var(--r);background:var(--mag);color:#fff;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all var(--t);white-space:nowrap}
     .add-btn:hover{background:var(--maglt)}
-
+    .add-btn.navy{background:var(--navy)}
+    .add-btn.navy:hover{background:var(--navy2)}
+    mark{background:#ffe066;color:var(--navy);border-radius:2px;padding:0 1px}
+    .clear-btn{background:var(--danger);color:#fff;border:none;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all var(--t)}
+    .clear-btn:hover{background:#a00020}
     /* GRID */
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
     .card{background:#fff;border:2px solid var(--pinkmid);border-radius:10px;overflow:hidden;cursor:pointer;transition:all var(--t);display:flex;flex-direction:column}
     .card:hover{border-color:var(--mag);transform:translateY(-3px);box-shadow:0 10px 32px rgba(10,21,64,0.18)}
-    .card-img{width:100%;aspect-ratio:4/3;background:var(--pinkbg);display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:42px}
+    .card-img{width:100%;aspect-ratio:4/3;background:var(--pinkbg);display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:36px}
     .card-img img{width:100%;height:100%;object-fit:cover}
-    .card-body{padding:14px 16px;flex:1;display:flex;flex-direction:column;gap:10px}
-    .card-name{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--navy);line-height:1.25}
+    .card-body{padding:12px 14px;flex:1;display:flex;flex-direction:column;gap:8px}
+    .card-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--navy);line-height:1.25}
+    .card-code{font-size:11px;font-weight:700;color:var(--pinkdark);letter-spacing:0.06em;margin-top:-4px}
+    .card-cat{font-size:10px;font-weight:700;color:var(--mag2);letter-spacing:0.06em;text-transform:uppercase}
     .card-owner{font-size:11px;font-weight:600;color:var(--dimp)}
-    .card-tags{display:flex;flex-wrap:wrap;gap:5px}
-    .chip{padding:3px 9px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:0.06em;background:var(--pinkbg);border:1.5px solid var(--pinkdark);color:var(--mag2)}
-    .card-acts{display:flex;gap:6px;justify-content:flex-end;margin-top:auto;padding-top:10px;border-top:2px solid var(--pinkbg)}
-    .ic-btn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;border-radius:6px;cursor:pointer;color:var(--dimp);transition:all var(--t);font-size:16px}
+    .card-tags{display:flex;flex-wrap:wrap;gap:4px}
+    .chip{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:0.05em;background:var(--pinkbg);border:1.5px solid var(--pinkdark);color:var(--mag2)}
+    .card-acts{display:flex;gap:4px;justify-content:flex-end;margin-top:auto;padding-top:8px;border-top:2px solid var(--pinkbg)}
+    .ic-btn{width:30px;height:30px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;border-radius:6px;cursor:pointer;color:var(--dimp);transition:all var(--t);font-size:14px}
     .ic-btn:hover{background:var(--pinkbg);color:var(--navy)}
     .ic-btn.del:hover{color:var(--danger)}
-
     /* EMPTY */
-    .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;gap:14px;color:var(--dimp);text-align:center}
-    .empty-icon{font-size:52px;opacity:0.3}
-    .empty h3{font-size:22px;font-weight:700;font-family:'Playfair Display',serif}
+    .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:14px;color:var(--dimp);text-align:center}
+    .empty-icon{font-size:48px;opacity:0.35}
+    .empty h3{font-size:20px;font-weight:700;font-family:'Playfair Display',serif}
     .empty p{font-size:13px;font-weight:500}
-
     /* MODAL */
     .backdrop{position:fixed;inset:0;background:rgba(8,16,46,0.75);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
     .modal{background:#fff;border:2px solid var(--pinkmid);border-radius:12px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(8,16,46,0.4)}
-    .modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:22px 26px 16px;border-bottom:2px solid var(--pinkbg);position:sticky;top:0;background:#fff}
-    .modal-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--navy)}
-    .modal-body{padding:22px 26px 26px;display:flex;flex-direction:column;gap:16px}
+    .modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:22px 26px 16px;border-bottom:2px solid var(--pinkbg);position:sticky;top:0;background:#fff;z-index:1}
+    .modal-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--navy)}
+    .modal-body{padding:22px 26px 26px;display:flex;flex-direction:column;gap:14px}
     .modal-foot{display:flex;justify-content:flex-end;gap:8px;padding-top:6px}
     .modal-foot .btn{width:auto}
     .close-btn{background:none;border:none;cursor:pointer;font-size:20px;color:var(--dimp);line-height:1;transition:color var(--t)}
     .close-btn:hover{color:var(--navy)}
-
     /* UPLOAD */
-    .uzone{border:2.5px dashed var(--pinkdark);border-radius:var(--r);padding:28px;text-align:center;cursor:pointer;transition:all var(--t);color:var(--dimp);display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--pinkbg)}
+    .uzone{border:2.5px dashed var(--pinkdark);border-radius:var(--r);padding:24px;text-align:center;cursor:pointer;transition:all var(--t);color:var(--dimp);display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--pinkbg)}
     .uzone:hover,.uzone.drag{border-color:var(--mag);color:var(--mag);background:#fff0f6}
-    .uzone-icon{font-size:28px}
+    .uzone-icon{font-size:26px}
     .uzone p{font-size:13px;font-weight:700}
     .uzone small{font-size:11px;font-weight:500;color:var(--pinkdark)}
-    .prev{width:100%;border-radius:var(--r);object-fit:cover;max-height:200px;border:2px solid var(--pinkmid)}
-
+    .prev{width:100%;border-radius:var(--r);object-fit:cover;max-height:180px;border:2px solid var(--pinkmid)}
     /* TAGS */
     .tags-ed{display:flex;flex-direction:column;gap:8px}
     .tags-row{display:flex;gap:8px}
@@ -167,79 +171,58 @@
     .tpill{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;background:var(--pinkbg);border:2px solid var(--pinkdark);color:var(--mag2)}
     .tpill button{background:none;border:none;cursor:pointer;color:var(--pinkdark);font-size:14px;line-height:1;transition:color var(--t)}
     .tpill button:hover{color:var(--danger)}
-
     /* LIGHTBOX */
     .lbox{position:fixed;inset:0;background:rgba(8,16,46,0.97);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
     .lbox-in{max-width:800px;width:100%;text-align:center}
-    .lbox-in img{max-height:68vh;object-fit:contain;border-radius:8px;width:100%}
-    .lbox-name{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#fff;margin:18px 0 10px}
-    .lbox-owner{font-size:13px;font-weight:600;color:#aabcee;margin-bottom:10px}
+    .lbox-in img{max-height:65vh;object-fit:contain;border-radius:8px;width:100%}
+    .lbox-name{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:#fff;margin:16px 0 4px}
+    .lbox-code{font-size:12px;font-weight:700;color:#aabcee;margin-bottom:8px;letter-spacing:0.08em}
+    .lbox-owner{font-size:13px;font-weight:600;color:#aabcee;margin-bottom:8px}
     .lbox-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
     .lbox-close{position:absolute;top:20px;right:20px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.4);border-radius:50%;cursor:pointer;color:#fff;font-size:20px;transition:all var(--t)}
     .lbox-close:hover{background:rgba(255,255,255,0.28)}
-
     /* BROWSE */
     .browse-filters{background:#fff;border:2px solid var(--pinkmid);border-radius:10px;padding:18px 20px;margin-bottom:20px;display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
-    .browse-filters .fg{margin-bottom:0;flex:1;min-width:140px}
-    .browse-filters .btn{width:auto;margin-top:0;align-self:flex-end}
-
-    /* PROFILE PAGE */
+    .browse-filters .fg{margin-bottom:0;flex:1;min-width:130px}
+    /* ACCESS REQUEST */
+    .request-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .request-card{background:#fff;border:2px solid var(--pinkmid);border-radius:16px;padding:40px;width:100%;max-width:480px;text-align:center;box-shadow:0 20px 60px rgba(10,21,64,0.15)}
+    .request-card h2{font-size:24px;color:var(--navy);margin-bottom:8px}
+    .request-card p{font-size:13px;color:var(--dimp);margin-bottom:24px;line-height:1.6}
+    /* ACCESS PANEL */
+    .access-panel{background:#fff;border:2px solid var(--pinkmid);border-radius:10px;padding:20px 24px;margin-bottom:20px}
+    .access-panel h3{font-size:16px;color:var(--navy);margin-bottom:14px}
+    .access-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--pinkbg);gap:12px;flex-wrap:wrap}
+    .access-row:last-child{border-bottom:none}
+    .access-info{font-size:13px;font-weight:600;color:var(--topp)}
+    .access-info small{display:block;font-size:11px;color:var(--dimp);font-weight:500;margin-top:2px}
+    .access-actions{display:flex;gap:6px}
+    .status-badge{padding:3px 10px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:0.06em}
+    .status-badge.pending{background:#fff3e0;color:#b06000;border:1.5px solid #f0a020}
+    .status-badge.approved{background:#e8f5ee;color:var(--success);border:1.5px solid var(--success)}
+    /* PROFILE */
     .profile-card{background:#fff;border:2px solid var(--pinkmid);border-radius:12px;padding:32px;max-width:560px;margin:0 auto}
     .profile-card h2{font-size:24px;color:var(--navy);margin-bottom:20px}
-
     /* TOAST */
     #toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--navy);border:2px solid var(--mag);padding:11px 20px;border-radius:8px;color:#fff;font-size:13px;font-weight:700;display:none;animation:fu 0.2s ease}
     #toast.success{border-color:#00b060;background:#004428}
     #toast.error{border-color:var(--danger);background:#5a0018}
     @keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
-    /* ALERT */
     .alert{padding:11px 14px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:4px}
     .alert.error{background:#fff0f2;border:2px solid var(--danger);color:var(--danger)}
     .alert.success{background:#f0fff6;border:2px solid var(--success);color:var(--success)}
-
-    /* BROWSE HUB CARD */
-    .hub-card{background:#fff;border:2px solid var(--pinkmid);border-radius:10px;padding:18px 20px;cursor:pointer;transition:all var(--t)}
-    .hub-card:hover{border-color:var(--mag);transform:translateY(-2px);box-shadow:0 8px 24px rgba(10,21,64,0.14)}
-    .hub-card h3{font-size:18px;color:var(--navy);margin-bottom:4px}
-    .hub-card p{font-size:12px;color:var(--dimp);font-weight:500}
-    .hub-card .meta{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
-    .hub-card .meta span{font-size:11px;font-weight:700;color:var(--pinkdark);background:var(--pinkbg);padding:3px 9px;border-radius:10px}
-
+    .info-box{background:var(--pinkbg);border:2px solid var(--pinkmid);border-radius:8px;padding:14px 16px;font-size:12px;font-weight:600;color:var(--dimp);line-height:1.6}
+    .info-box strong{color:var(--navy)}
+    .link-box{background:var(--pinkbg);border:2px solid var(--pinkdark);border-radius:8px;padding:12px 16px;font-size:12px;font-family:monospace;font-weight:600;color:var(--navy);word-break:break-all}
     .section-title{font-size:18px;color:var(--navy);margin-bottom:16px}
-    .back-btn{background:none;border:none;cursor:pointer;color:var(--mag);font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;margin-bottom:16px;font-family:'Inter',sans-serif;padding:0}
-    .back-btn:hover{color:var(--navy)}
-
-    .card-code{font-size:11px;font-weight:700;color:var(--pinkdark);letter-spacing:0.06em;margin-top:-4px}
-    mark{background:#ffe066;color:var(--navy);border-radius:2px;padding:0 1px}
-    .clear-btn{background:var(--danger);color:#fff;border:none;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all var(--t)}
-    .clear-btn:hover{background:#a00020}
-    @media(max-width:600px){
-      .auth-card{padding:28px 20px}
-      .form-row{grid-template-columns:1fr}
-      .main{padding:16px}
-      .hdr{padding:0 16px}
-    }
+    @media(max-width:768px){.hub-layout{grid-template-columns:1fr}.cat-sidebar{display:none}.form-row{grid-template-columns:1fr}.main{padding:16px}.hdr{padding:0 20px;min-height:80px}.brand h1{font-size:20px}}
   </style>
 </head>
 <body>
-
-<div id="loading">
-  <div class="spinner"></div>
-  <p style="color:var(--navy);font-weight:600;font-size:14px">Loading My Stock Hub…</p>
-</div>
-
+<div id="loading"><div class="spinner"></div><p style="color:var(--navy);font-weight:600">Loading My Stock Hub…</p></div>
 <div id="auth-screen" style="display:none">
   <div class="auth-card">
-    <div class="auth-logo">
-      <div class="auth-logo-icon">⬡</div>
-      <div>
-        <h1>MY STOCK HUB</h1>
-        <span>Creative Inventory</span>
-      </div>
-    </div>
-
-    <!-- LOGIN -->
+    <div class="auth-logo"><div class="auth-logo-icon">⬡</div><div><h1>MY STOCK HUB</h1><span>Creative Inventory</span></div></div>
     <div id="login-form">
       <h2 class="auth-title">Welcome back</h2>
       <p class="auth-sub">Sign in to your account</p>
@@ -251,24 +234,14 @@
       <div class="auth-divider"><hr/><span>or</span><hr/></div>
       <div class="auth-link">Don't have an account? <a onclick="showAuth('register')">Register free</a></div>
     </div>
-
-    <!-- REGISTER -->
     <div id="register-form" style="display:none">
       <h2 class="auth-title">Create your account</h2>
       <p class="auth-sub">Join My Stock Hub — free for viewers, paid for hub owners</p>
       <div id="register-alert"></div>
-      <p style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--navy);margin-bottom:8px">Account Type</p>
-      <div class="account-type-row">
-        <div class="type-card selected" id="type-viewer" onclick="selectType('viewer')">
-          <div class="badge-free">FREE</div>
-          <h4>Viewer</h4>
-          <p>Browse &amp; search all hubs</p>
-        </div>
-        <div class="type-card" id="type-owner" onclick="selectType('owner')">
-          <div class="badge-paid">PAID (TESTING: FREE)</div>
-          <h4>Hub Owner</h4>
-          <p>Your own inventory hub</p>
-        </div>
+      <p class="fl" style="margin-bottom:8px">Account Type</p>
+      <div class="type-row">
+        <div class="type-card selected" id="type-viewer" onclick="selectType('viewer')"><div class="badge-free">FREE</div><h4>Viewer</h4><p>Browse &amp; search all hubs</p></div>
+        <div class="type-card" id="type-owner" onclick="selectType('owner')"><div class="badge-paid">PAID (TESTING: FREE)</div><h4>Hub Owner</h4><p>Your own inventory hub</p></div>
       </div>
       <div class="form-row">
         <div class="fg"><label class="fl">First Name</label><input class="fi" type="text" id="reg-firstname" placeholder="Jane"/></div>
@@ -277,12 +250,7 @@
       <div class="fg"><label class="fl">Email</label><input class="fi" type="email" id="reg-email" placeholder="your@email.com"/></div>
       <div class="fg"><label class="fl">Password</label><input class="fi" type="password" id="reg-password" placeholder="Min 6 characters"/></div>
       <div class="fg"><label class="fl">Country</label>
-        <select class="fi" id="reg-country">
-          <option value="">Select country…</option>
-          <option>Australia</option><option>Canada</option><option>France</option><option>Germany</option>
-          <option>Ireland</option><option>Italy</option><option>New Zealand</option><option>South Africa</option>
-          <option>Spain</option><option>United Kingdom</option><option>United States</option><option>Other</option>
-        </select>
+        <select class="fi" id="reg-country"><option value="">Select country…</option><option>Australia</option><option>Canada</option><option>France</option><option>Germany</option><option>Ireland</option><option>Italy</option><option>New Zealand</option><option>South Africa</option><option>Spain</option><option>United Kingdom</option><option>United States</option><option>Other</option></select>
       </div>
       <div class="form-row">
         <div class="fg"><label class="fl">State / Region</label><input class="fi" type="text" id="reg-state" placeholder="e.g. Victoria"/></div>
@@ -291,8 +259,6 @@
       <button class="btn btn-p" onclick="handleRegister()">Create Account</button>
       <div class="auth-link" style="margin-top:14px">Already have an account? <a onclick="showAuth('login')">Sign in</a></div>
     </div>
-
-    <!-- FORGOT PASSWORD -->
     <div id="forgot-form" style="display:none">
       <h2 class="auth-title">Reset password</h2>
       <p class="auth-sub">Enter your email and we'll send you a reset link</p>
@@ -304,109 +270,139 @@
   </div>
 </div>
 
+<!-- REQUEST ACCESS SCREEN -->
+<div id="request-screen" style="display:none">
+  <div class="request-card">
+    <div style="font-size:48px;margin-bottom:16px">🔒</div>
+    <h2 id="req-hub-name">Private Hub</h2>
+    <p id="req-hub-desc">This hub is private. Sign in or create a free account to request access from the hub owner.</p>
+    <div id="req-alert"></div>
+    <div id="req-actions"></div>
+  </div>
+</div>
+
 <!-- APP -->
 <div id="app-screen" style="display:none">
   <header class="hdr">
-    <div class="brand">
-      <span class="brand-icon">⬡</span>
-      <div>
-        <h1>MY STOCK HUB</h1>
-        <span class="brand-sub">Creative Inventory</span>
-      </div>
-    </div>
+    <div class="brand"><span class="brand-icon">⬡</span><div><h1>MY STOCK HUB</h1><span class="brand-sub">Creative Inventory</span></div></div>
     <div class="hdr-right">
-      <div style="text-align:right">
-        <div class="user-name" id="hdr-name">—</div>
-        <div class="user-type" id="hdr-type">—</div>
-      </div>
+      <div style="text-align:right"><div class="user-name" id="hdr-name">—</div><div class="user-type" id="hdr-type">—</div></div>
+      <button class="hdr-btn" id="notif-btn" onclick="switchTab('requests')" style="display:none">🔔 Requests<span class="notif-dot" id="notif-dot" style="display:none"></span></button>
       <button class="hdr-btn" onclick="handleLogout()">Sign Out</button>
     </div>
   </header>
-
   <div class="nav-tabs">
     <div class="nav-tab active" id="nav-hub" onclick="switchTab('hub')">My Hub</div>
     <div class="nav-tab" id="nav-browse" onclick="switchTab('browse')">Browse Hubs</div>
+    <div class="nav-tab" id="nav-requests" onclick="switchTab('requests')" style="display:none">Access Requests</div>
     <div class="nav-tab" id="nav-profile" onclick="switchTab('profile')">My Profile</div>
   </div>
-
   <div class="main">
-    <!-- HUB TAB -->
-    <div id="tab-hub">
-      <div id="hub-content"></div>
-    </div>
-
-    <!-- BROWSE TAB -->
-    <div id="tab-browse" style="display:none">
-      <div id="browse-content"></div>
-    </div>
-
-    <!-- PROFILE TAB -->
-    <div id="tab-profile" style="display:none">
-      <div id="profile-content"></div>
-    </div>
+    <div id="tab-hub"></div>
+    <div id="tab-browse" style="display:none"></div>
+    <div id="tab-requests" style="display:none"></div>
+    <div id="tab-profile" style="display:none"></div>
   </div>
 </div>
 
 <!-- ITEM MODAL -->
-<div id="item-modal" class="backdrop" style="display:none" onclick="closeItemModal(event)">
+<div id="item-modal" class="backdrop" style="display:none" onclick="closeModal('item-modal',event)">
   <div class="modal" onclick="event.stopPropagation()">
-    <div class="modal-hdr">
-      <span class="modal-title" id="item-modal-title">Add Item</span>
-      <button class="close-btn" onclick="closeItemModal()">✕</button>
-    </div>
+    <div class="modal-hdr"><span class="modal-title" id="item-modal-title">Add Item</span><button class="close-btn" onclick="closeModal('item-modal')">✕</button></div>
     <div class="modal-body">
       <div id="item-form-alert"></div>
       <div class="form-row">
         <div class="fg"><label class="fl">Item Name</label><input class="fi" id="item-name" placeholder="Enter item name…"/></div>
-        <div class="fg"><label class="fl">Product Code</label><input class="fi" id="item-code" placeholder="e.g. AUT-001"/></div>
+        <div class="fg"><label class="fl">Product Code <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label><input class="fi" id="item-code" placeholder="e.g. AUT-001"/></div>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label class="fl">Category <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+          <select class="fi" id="item-category" onchange="loadSubgroups(this.value)"><option value="">No category</option></select>
+        </div>
+        <div class="fg"><label class="fl">Sub-group <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+          <select class="fi" id="item-subgroup"><option value="">No sub-group</option></select>
+        </div>
       </div>
       <div class="fg">
         <label class="fl">Image</label>
-        <div id="upload-area">
-          <div class="uzone" id="uzone" onclick="document.getElementById('file-input').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)">
-            <div class="uzone-icon">📤</div>
-            <p>Drop image or click to upload</p>
-            <small>PNG · JPG · WEBP</small>
-          </div>
-          <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFile(this.files[0])"/>
-        </div>
-        <div id="preview-area" style="display:none">
-          <img id="img-preview" class="prev" alt=""/>
-          <button class="btn btn-g btn-sm" style="margin-top:8px;width:auto" onclick="removeImage()">Remove Image</button>
-        </div>
+        <div id="upload-area"><div class="uzone" id="uzone" onclick="document.getElementById('file-input').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)"><div class="uzone-icon">📤</div><p>Drop image or click to upload</p><small>PNG · JPG · WEBP</small></div><input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFile(this.files[0])"/></div>
+        <div id="preview-area" style="display:none"><img id="img-preview" class="prev" alt=""/><button class="btn btn-g btn-sm" style="margin-top:8px;width:auto" onclick="removeImage()">Remove Image</button></div>
       </div>
-      <div class="fg">
-        <label class="fl">Tags</label>
+      <div class="fg"><label class="fl">Tags</label>
         <div class="tags-ed">
-          <div class="tags-row">
-            <input class="fi" id="tag-input" placeholder="Type a tag and press Enter…" onkeydown="if(event.key==='Enter'){event.preventDefault();addTag()}"/>
-            <button class="btn btn-g btn-sm" onclick="addTag()">Add</button>
-          </div>
+          <div class="tags-row"><input class="fi" id="tag-input" placeholder="Type a tag and press Enter…" onkeydown="if(event.key==='Enter'){event.preventDefault();addTag()}"/><button class="btn btn-g btn-sm" onclick="addTag()">Add</button></div>
           <div class="tags-list" id="tags-list"></div>
         </div>
       </div>
-      <div class="modal-foot">
-        <button class="btn btn-g btn-sm" onclick="closeItemModal()">Cancel</button>
-        <button class="btn btn-p btn-sm" onclick="saveItem()">Save Item</button>
-      </div>
+      <div class="modal-foot"><button class="btn btn-g btn-sm" onclick="closeModal('item-modal')">Cancel</button><button class="btn btn-p btn-sm" onclick="saveItem()">Save Item</button></div>
     </div>
   </div>
 </div>
 
 <!-- HUB SETTINGS MODAL -->
-<div id="hub-modal" class="backdrop" style="display:none" onclick="closeHubModal(event)">
-  <div class="modal" style="max-width:420px" onclick="event.stopPropagation()">
-    <div class="modal-hdr">
-      <span class="modal-title">Hub Settings</span>
-      <button class="close-btn" onclick="closeHubModal()">✕</button>
-    </div>
+<div id="hub-modal" class="backdrop" style="display:none" onclick="closeModal('hub-modal',event)">
+  <div class="modal" style="max-width:460px" onclick="event.stopPropagation()">
+    <div class="modal-hdr"><span class="modal-title">Hub Settings</span><button class="close-btn" onclick="closeModal('hub-modal')">✕</button></div>
     <div class="modal-body">
       <div class="fg"><label class="fl">Hub Name</label><input class="fi" id="hub-name-input" placeholder="e.g. Sarah's Art Supplies"/></div>
-      <div class="fg"><label class="fl">Hub Label <span style="font-weight:500;text-transform:none;letter-spacing:0;font-size:11px">(optional)</span></label><input class="fi" id="hub-label-input" placeholder="e.g. Fabric Collection · Art Room"/></div>
-      <div class="modal-foot">
-        <button class="btn btn-g btn-sm" onclick="closeHubModal()">Cancel</button>
-        <button class="btn btn-p btn-sm" onclick="saveHubSettings()">Save</button>
+      <div class="fg"><label class="fl">Hub Label <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px">(optional)</span></label><input class="fi" id="hub-label-input" placeholder="e.g. Fabric Collection"/></div>
+      <div class="fg"><label class="fl">Hub Access</label>
+        <div style="display:flex;gap:10px;margin-top:4px">
+          <div class="type-card" id="access-open" onclick="selectAccess('open')" style="flex:1;padding:12px;text-align:center;cursor:pointer"><div style="font-size:20px;margin-bottom:4px">🌐</div><h4 style="font-size:12px">Open</h4><p style="font-size:11px">Anyone can browse</p></div>
+          <div class="type-card" id="access-restricted" onclick="selectAccess('restricted')" style="flex:1;padding:12px;text-align:center;cursor:pointer"><div style="font-size:20px;margin-bottom:4px">🔒</div><h4 style="font-size:12px">Restricted</h4><p style="font-size:11px">Request & approve</p></div>
+        </div>
       </div>
+      <div id="private-link-section" style="display:none">
+        <label class="fl" style="margin-bottom:6px">Private Access Link</label>
+        <div class="link-box" id="private-link-display"></div>
+        <button class="btn btn-g btn-sm" style="margin-top:8px;width:auto" onclick="copyPrivateLink()">📋 Copy Link</button>
+        <p style="font-size:11px;font-weight:500;color:var(--dimp);margin-top:6px">Share this link with people you want to request access. They must be registered users.</p>
+      </div>
+      <div class="modal-foot"><button class="btn btn-g btn-sm" onclick="closeModal('hub-modal')">Cancel</button><button class="btn btn-p btn-sm" onclick="saveHubSettings()">Save</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORY MODAL -->
+<div id="cat-modal" class="backdrop" style="display:none" onclick="closeModal('cat-modal',event)">
+  <div class="modal" style="max-width:420px" onclick="event.stopPropagation()">
+    <div class="modal-hdr"><span class="modal-title" id="cat-modal-title">Add Category</span><button class="close-btn" onclick="closeModal('cat-modal')">✕</button></div>
+    <div class="modal-body">
+      <div class="fg"><label class="fl">Category Name</label><input class="fi" id="cat-name-input" placeholder="e.g. Stamps, Papers, Die Cuts…"/></div>
+      <div id="subgroup-section" style="display:none">
+        <div class="fg"><label class="fl">Add Sub-group <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px">(optional)</span></label>
+          <div class="tags-row"><input class="fi" id="subgroup-input" placeholder="e.g. Floral, Christmas…" onkeydown="if(event.key==='Enter'){event.preventDefault();addSubgroupInput()}"/><button class="btn btn-g btn-sm" onclick="addSubgroupInput()">Add</button></div>
+          <div class="tags-list" id="subgroups-preview" style="margin-top:8px"></div>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn btn-g btn-sm" onclick="closeModal('cat-modal')">Cancel</button><button class="btn btn-p btn-sm" onclick="saveCategoryModal()">Save</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- BULK UPLOAD MODAL -->
+<div id="bulk-modal" class="backdrop" style="display:none" onclick="closeModal('bulk-modal',event)">
+  <div class="modal" style="max-width:580px" onclick="event.stopPropagation()">
+    <div class="modal-hdr"><span class="modal-title">Bulk Upload Items</span><button class="close-btn" onclick="closeModal('bulk-modal')">✕</button></div>
+    <div class="modal-body">
+      <div id="bulk-alert"></div>
+      <div class="info-box">📋 <strong>How bulk upload works:</strong> Download the CSV template, fill in your products with up to 5 tags, category and sub-group per item, then upload it back. Images can be added per item afterwards.</div>
+      <div class="fg"><label class="fl">Shared Tag for this batch <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px">(optional)</span></label><input class="fi" id="bulk-tag" placeholder="e.g. autumn, spring-2025…"/><small style="font-size:11px;font-weight:500;color:var(--pinkdark);margin-top:4px;display:block">Applied to every item in this upload</small></div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><button class="btn btn-g btn-sm" style="width:auto" onclick="downloadTemplate()">⬇ Download CSV Template</button><span style="font-size:12px;font-weight:500;color:var(--dimp)">Fill it in, then upload below</span></div>
+      <div class="fg"><label class="fl">Upload completed CSV</label>
+        <div class="uzone" id="csv-zone" onclick="document.getElementById('csv-input').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleCsvDrop(event)"><div class="uzone-icon">📂</div><p>Drop CSV file or click to upload</p><small>.csv files only</small></div>
+        <input type="file" id="csv-input" accept=".csv" style="display:none" onchange="handleCsvFile(this.files[0])"/>
+      </div>
+      <div id="csv-preview" style="display:none">
+        <label class="fl" style="margin-bottom:8px">Preview — <span id="csv-count"></span></label>
+        <div style="background:var(--pinkbg);border:2px solid var(--pinkmid);border-radius:8px;max-height:200px;overflow-y:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:12px">
+            <thead><tr style="background:var(--pinkmid)"><th style="padding:7px 10px;text-align:left;font-weight:700;color:var(--navy)">Name</th><th style="padding:7px 10px;text-align:left;font-weight:700;color:var(--navy)">Code</th><th style="padding:7px 10px;text-align:left;font-weight:700;color:var(--navy)">Category</th><th style="padding:7px 10px;text-align:left;font-weight:700;color:var(--navy)">Sub-group</th><th style="padding:7px 10px;text-align:left;font-weight:700;color:var(--navy)">Tags</th><th style="padding:7px 10px;text-align:left;font-weight:700;color:var(--navy)">✓</th></tr></thead>
+            <tbody id="csv-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn btn-g btn-sm" onclick="closeModal('bulk-modal')">Cancel</button><button class="btn btn-p btn-sm" id="bulk-save-btn" style="display:none" onclick="saveBulkItems()">Upload All Items</button></div>
     </div>
   </div>
 </div>
@@ -417,72 +413,9 @@
   <div class="lbox-in" onclick="event.stopPropagation()">
     <img id="lbox-img" src="" alt="" style="display:none"/>
     <div class="lbox-name" id="lbox-name"></div>
+    <div class="lbox-code" id="lbox-code"></div>
     <div class="lbox-owner" id="lbox-owner"></div>
     <div class="lbox-tags" id="lbox-tags"></div>
-  </div>
-</div>
-
-
-<!-- BULK UPLOAD MODAL -->
-<div id="bulk-modal" class="backdrop" style="display:none" onclick="closeBulkModal(event)">
-  <div class="modal" style="max-width:560px" onclick="event.stopPropagation()">
-    <div class="modal-hdr">
-      <span class="modal-title">Bulk Upload Items</span>
-      <button class="close-btn" onclick="closeBulkModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div id="bulk-alert"></div>
-
-      <div style="background:var(--pinkbg);border:2px solid var(--pinkmid);border-radius:8px;padding:14px 16px;display:flex;align-items:flex-start;gap:10px">
-        <span style="font-size:18px">📋</span>
-        <div>
-          <p style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px">How bulk upload works</p>
-          <p style="font-size:12px;font-weight:500;color:var(--dimp);line-height:1.6">Download the CSV template and fill in product names, codes and up to 5 tags per item. Use Tag 1 for a shared range tag, then add specific tags in columns 2–5. Leave unused tag columns blank. The shared tag field above applies to every item in the batch on top of any CSV tags. Images can be added per item afterwards.</p>
-        </div>
-      </div>
-
-      <div class="fg">
-        <label class="fl">Shared Tag for this batch</label>
-        <input class="fi" id="bulk-tag" placeholder="e.g. autumn, spring-2025, new-arrivals…"/>
-        <small style="font-size:11px;font-weight:500;color:var(--pinkdark);margin-top:4px;display:block">This tag will be applied to every item in this upload</small>
-      </div>
-
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <button class="btn btn-g btn-sm" style="width:auto" onclick="downloadTemplate()">⬇ Download CSV Template</button>
-        <span style="font-size:12px;font-weight:500;color:var(--dimp)">Fill it in, then upload below</span>
-      </div>
-
-      <div class="fg">
-        <label class="fl">Upload completed CSV</label>
-        <div class="uzone" id="csv-zone" onclick="document.getElementById('csv-input').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleCsvDrop(event)">
-          <div class="uzone-icon">📂</div>
-          <p>Drop CSV file or click to upload</p>
-          <small>.csv files only</small>
-        </div>
-        <input type="file" id="csv-input" accept=".csv" style="display:none" onchange="handleCsvFile(this.files[0])"/>
-      </div>
-
-      <div id="csv-preview" style="display:none">
-        <label class="fl" style="margin-bottom:8px">Preview — <span id="csv-count"></span></label>
-        <div style="background:var(--pinkbg);border:2px solid var(--pinkmid);border-radius:8px;max-height:200px;overflow-y:auto">
-          <table style="width:100%;border-collapse:collapse;font-size:12px">
-            <thead>
-              <tr style="background:var(--pinkmid)">
-                <th style="padding:8px 12px;text-align:left;font-weight:700;color:var(--navy)">Product Name</th>
-                <th style="padding:8px 12px;text-align:left;font-weight:700;color:var(--navy)">Product Code</th>
-                <th style="padding:8px 12px;text-align:left;font-weight:700;color:var(--navy)">Status</th>
-              </tr>
-            </thead>
-            <tbody id="csv-table-body"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="modal-foot">
-        <button class="btn btn-g btn-sm" onclick="closeBulkModal()">Cancel</button>
-        <button class="btn btn-p btn-sm" id="bulk-save-btn" style="display:none" onclick="saveBulkItems()">Upload All Items</button>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -493,35 +426,83 @@ const SUPABASE_URL = 'https://mdyorlbybimpywiyigyn.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_uzYQkBBfZ9jeum9XLmh29w_JE2wouPt';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let currentUser = null;
-let currentProfile = null;
-let currentHub = null;
-let currentItems = [];
-let editingItemId = null;
-let currentTags = [];
-let currentImage = null;
-let activeFilterTags = [];
-let searchQuery = '';
-let showUntagged = false;
-let selectedAccountType = 'viewer';
+let currentUser = null, currentProfile = null, currentHub = null;
+let currentItems = [], currentCategories = [], currentSubgroups = [];
+let editingItemId = null, currentTags = [], currentImage = null;
+let activeFilterTags = [], searchQuery = '', showUntagged = false;
+let selectedAccountType = 'viewer', selectedAccess = 'open';
+let activeCategoryId = null, activeSubgroupId = null;
+let pendingSubgroups = [];
+let editingCategoryId = null;
+let allBrowseItems = [];
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 async function init() {
+  // Check for private hub token in URL
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('hub');
+  if (token) { await handlePrivateLink(token); return; }
+
   const { data: { session } } = await sb.auth.getSession();
-  if (session) {
-    await loadUser(session.user);
-  } else {
-    showScreen('auth');
-    showAuth('login');
-  }
+  if (session) { await loadUser(session.user); }
+  else { showScreen('auth'); showAuth('login'); }
+
   sb.auth.onAuthStateChange(async (event, session) => {
-    if (event === 'SIGNED_IN' && session) {
-      await loadUser(session.user);
-    } else if (event === 'SIGNED_OUT') {
-      currentUser = null; currentProfile = null; currentHub = null;
-      showScreen('auth'); showAuth('login');
-    }
+    if (event === 'SIGNED_IN' && session) { await loadUser(session.user); }
+    else if (event === 'SIGNED_OUT') { currentUser = null; currentProfile = null; currentHub = null; showScreen('auth'); showAuth('login'); }
   });
+}
+
+async function handlePrivateLink(token) {
+  // Find hub by private token
+  const { data: hub } = await sb.from('hubs').select('*, profiles(full_name)').eq('private_token', token).single();
+  document.getElementById('loading').style.display = 'none';
+  if (!hub) {
+    document.getElementById('request-screen').style.display = 'flex';
+    document.getElementById('req-hub-name').textContent = 'Hub Not Found';
+    document.getElementById('req-hub-desc').textContent = 'This link is invalid or has expired.';
+    document.getElementById('req-actions').innerHTML = '';
+    return;
+  }
+  document.getElementById('request-screen').style.display = 'flex';
+  document.getElementById('req-hub-name').textContent = hub.name;
+  document.getElementById('req-hub-desc').textContent = `${hub.profiles?.full_name || 'A hub owner'} has a private hub on My Stock Hub. Sign in or register to request access.`;
+
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) {
+    document.getElementById('req-actions').innerHTML = `
+      <button class="btn btn-p" onclick="window._pendingToken='${token}';showScreen('auth');showAuth('login')">Sign In to Request Access</button>
+      <div class="auth-link" style="margin-top:12px">No account? <a onclick="window._pendingToken='${token}';showScreen('auth');showAuth('register')">Register free</a></div>`;
+    return;
+  }
+  // Logged in — check if already requested/approved
+  const user = session.user;
+  if (hub.owner_id === user.id) {
+    document.getElementById('req-hub-desc').textContent = 'This is your own hub.';
+    document.getElementById('req-actions').innerHTML = `<button class="btn btn-p" onclick="window.location.href=window.location.origin">Go to My Hub</button>`;
+    return;
+  }
+  const { data: existing } = await sb.from('hub_access').select('*').eq('hub_id', hub.id).eq('requester_id', user.id).single();
+  if (existing?.status === 'approved') {
+    document.getElementById('req-hub-desc').textContent = 'You already have access to this hub. Go to Browse Hubs to find it.';
+    document.getElementById('req-actions').innerHTML = `<button class="btn btn-p" onclick="window.location.href=window.location.origin">Go to App</button>`;
+    return;
+  }
+  if (existing?.status === 'pending') {
+    document.getElementById('req-hub-desc').textContent = 'Your access request is pending approval from the hub owner.';
+    document.getElementById('req-actions').innerHTML = '';
+    return;
+  }
+  document.getElementById('req-actions').innerHTML = `<button class="btn btn-p" onclick="submitAccessRequest('${hub.id}','${token}')">Request Access to This Hub</button>`;
+}
+
+async function submitAccessRequest(hubId, token) {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  const { error } = await sb.from('hub_access').insert({ hub_id: hubId, requester_id: session.user.id, status: 'pending' });
+  if (error) { document.getElementById('req-alert').innerHTML = `<div class="alert error">${error.message}</div>`; return; }
+  document.getElementById('req-hub-desc').textContent = 'Your request has been sent. The hub owner will review it and notify you.';
+  document.getElementById('req-actions').innerHTML = '';
 }
 
 async function loadUser(user) {
@@ -529,38 +510,44 @@ async function loadUser(user) {
   let { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
   if (!profile) {
     const meta = user.user_metadata || {};
-    await sb.from('profiles').insert({
-      id: user.id,
-      email: user.email,
-      account_type: meta.account_type || 'viewer',
-      full_name: meta.full_name || '',
-      country: meta.country || '',
-      state: meta.state || '',
-      town: meta.town || ''
-    });
+    await sb.from('profiles').insert({ id: user.id, email: user.email, account_type: meta.account_type || 'viewer', full_name: meta.full_name || '', country: meta.country || '', state: meta.state || '', town: meta.town || '' });
     ({ data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single());
   }
   currentProfile = profile;
-  updateHeader();
+
+  // Handle pending token after login
+  if (window._pendingToken) { const t = window._pendingToken; window._pendingToken = null; await handlePrivateLink(t); return; }
+
   if (profile.account_type === 'owner') {
     const { data: hub } = await sb.from('hubs').select('*').eq('owner_id', user.id).single();
     currentHub = hub;
     document.getElementById('nav-hub').style.display = '';
-    showScreen('app');
-    switchTab('hub');
-    await renderHubTab();
+    document.getElementById('nav-requests').style.display = '';
+    document.getElementById('notif-btn').style.display = '';
   } else {
-    showScreen('app');
     document.getElementById('nav-hub').style.display = 'none';
+  }
+  updateHeader();
+  showScreen('app');
+  if (profile.account_type === 'owner') {
+    switchTab('hub');
+    await checkPendingRequests();
+  } else {
     switchTab('browse');
-    await renderBrowseTab();
   }
 }
 
 function updateHeader() {
   if (!currentProfile) return;
-  document.getElementById('hdr-name').textContent = (currentProfile.full_name || currentProfile.email || '');
+  document.getElementById('hdr-name').textContent = currentProfile.full_name || currentProfile.email || '';
   document.getElementById('hdr-type').textContent = currentProfile.account_type === 'owner' ? 'Hub Owner' : 'Viewer';
+}
+
+async function checkPendingRequests() {
+  if (!currentHub) return;
+  const { data } = await sb.from('hub_access').select('*').eq('hub_id', currentHub.id).eq('status', 'pending');
+  const hasPending = data && data.length > 0;
+  document.getElementById('notif-dot').style.display = hasPending ? 'block' : 'none';
 }
 
 // ── SCREENS ───────────────────────────────────────────────────────────────────
@@ -568,627 +555,479 @@ function showScreen(name) {
   document.getElementById('loading').style.display = 'none';
   document.getElementById('auth-screen').style.display = name === 'auth' ? 'flex' : 'none';
   document.getElementById('app-screen').style.display = name === 'app' ? 'flex' : 'none';
+  document.getElementById('request-screen').style.display = name === 'request' ? 'flex' : 'none';
 }
 function showAuth(mode) {
-  document.getElementById('login-form').style.display = mode === 'login' ? 'block' : 'none';
-  document.getElementById('register-form').style.display = mode === 'register' ? 'block' : 'none';
-  document.getElementById('forgot-form').style.display = mode === 'forgot' ? 'block' : 'none';
+  ['login','register','forgot'].forEach(m => document.getElementById(m+'-form').style.display = m===mode?'block':'none');
 }
 function switchTab(tab) {
-  ['hub','browse','profile'].forEach(t => {
-    document.getElementById(`tab-${t}`).style.display = t === tab ? 'block' : 'none';
-    const nav = document.getElementById(`nav-${t}`);
-    if (nav) nav.classList.toggle('active', t === tab);
+  ['hub','browse','requests','profile'].forEach(t => {
+    const el = document.getElementById('tab-'+t);
+    const nav = document.getElementById('nav-'+t);
+    if (el) el.style.display = t===tab?'block':'none';
+    if (nav) nav.classList.toggle('active', t===tab);
   });
-  if (tab === 'hub') renderHubTab();
-  if (tab === 'browse') renderBrowseTab();
-  if (tab === 'profile') renderProfileTab();
+  if (tab==='hub') renderHubTab();
+  if (tab==='browse') renderBrowseTab();
+  if (tab==='requests') renderRequestsTab();
+  if (tab==='profile') renderProfileTab();
+}
+function closeModal(id, e) {
+  if (!e || e.target===document.getElementById(id)) document.getElementById(id).style.display='none';
 }
 function selectType(type) {
   selectedAccountType = type;
-  document.getElementById('type-viewer').classList.toggle('selected', type === 'viewer');
-  document.getElementById('type-owner').classList.toggle('selected', type === 'owner');
+  document.getElementById('type-viewer').classList.toggle('selected', type==='viewer');
+  document.getElementById('type-owner').classList.toggle('selected', type==='owner');
+}
+function selectAccess(type) {
+  selectedAccess = type;
+  document.getElementById('access-open').classList.toggle('selected', type==='open');
+  document.getElementById('access-restricted').classList.toggle('selected', type==='restricted');
+  document.getElementById('private-link-section').style.display = type==='restricted'?'block':'none';
+  if (type==='restricted' && currentHub?.private_token) {
+    document.getElementById('private-link-display').textContent = window.location.origin+'?hub='+currentHub.private_token;
+  }
 }
 
 // ── AUTH ──────────────────────────────────────────────────────────────────────
 async function handleLogin() {
-  const email = document.getElementById('login-email').value.trim();
-  const password = document.getElementById('login-password').value;
-  document.getElementById('login-alert').innerHTML = '';
-  if (!email || !password) return showAlert('login-alert', 'Please enter your email and password.', 'error');
-  const { error } = await sb.auth.signInWithPassword({ email, password });
-  if (error) showAlert('login-alert', error.message, 'error');
+  const email=document.getElementById('login-email').value.trim(), password=document.getElementById('login-password').value;
+  document.getElementById('login-alert').innerHTML='';
+  if(!email||!password) return showAlert('login-alert','Please enter your email and password.','error');
+  const {error}=await sb.auth.signInWithPassword({email,password});
+  if(error) showAlert('login-alert',error.message,'error');
 }
 async function handleRegister() {
-  const email = document.getElementById('reg-email').value.trim();
-  const password = document.getElementById('reg-password').value;
-  const firstname = document.getElementById('reg-firstname').value.trim();
-  const lastname = document.getElementById('reg-lastname').value.trim();
-  const country = document.getElementById('reg-country').value;
-  const state = document.getElementById('reg-state').value.trim();
-  const town = document.getElementById('reg-town').value.trim();
-  document.getElementById('register-alert').innerHTML = '';
-  if (!email || !password || !firstname || !lastname) return showAlert('register-alert', 'Please fill in all required fields.', 'error');
-  if (password.length < 6) return showAlert('register-alert', 'Password must be at least 6 characters.', 'error');
-  const { data, error } = await sb.auth.signUp({ email, password, options: { data: { account_type: selectedAccountType, full_name: `${firstname} ${lastname}`, country, state, town } } });
-  if (error) return showAlert('register-alert', error.message, 'error');
-  if (data.user) {
-    await sb.from('profiles').upsert({
-      id: data.user.id, email,
-      full_name: `${firstname} ${lastname}`,
-      country, state, town,
-      account_type: selectedAccountType
-    });
-  }
-  showAlert('register-alert', 'Account created! Signing you in…', 'success');
+  const email=document.getElementById('reg-email').value.trim(), password=document.getElementById('reg-password').value;
+  const firstname=document.getElementById('reg-firstname').value.trim(), lastname=document.getElementById('reg-lastname').value.trim();
+  const country=document.getElementById('reg-country').value, state=document.getElementById('reg-state').value.trim(), town=document.getElementById('reg-town').value.trim();
+  document.getElementById('register-alert').innerHTML='';
+  if(!email||!password||!firstname||!lastname) return showAlert('register-alert','Please fill in all required fields.','error');
+  if(password.length<6) return showAlert('register-alert','Password must be at least 6 characters.','error');
+  const {data,error}=await sb.auth.signUp({email,password,options:{data:{account_type:selectedAccountType,full_name:`${firstname} ${lastname}`,country,state,town}}});
+  if(error) return showAlert('register-alert',error.message,'error');
+  if(data.user) await sb.from('profiles').upsert({id:data.user.id,email,full_name:`${firstname} ${lastname}`,country,state,town,account_type:selectedAccountType});
+  showAlert('register-alert','Account created! Signing you in…','success');
 }
 async function handleForgot() {
-  const email = document.getElementById('forgot-email').value.trim();
-  document.getElementById('forgot-alert').innerHTML = '';
-  if (!email) return showAlert('forgot-alert', 'Please enter your email address.', 'error');
-  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: 'https://mystockhub.netlify.app' });
-  if (error) return showAlert('forgot-alert', error.message, 'error');
-  showAlert('forgot-alert', 'Reset link sent! Check your inbox.', 'success');
+  const email=document.getElementById('forgot-email').value.trim();
+  document.getElementById('forgot-alert').innerHTML='';
+  if(!email) return showAlert('forgot-alert','Please enter your email address.','error');
+  const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:'https://musical-bingo-wrr9.vercel.app'});
+  if(error) return showAlert('forgot-alert',error.message,'error');
+  showAlert('forgot-alert','Reset link sent! Check your inbox.','success');
 }
-async function handleLogout() {
-  await sb.auth.signOut();
-}
-function showAlert(id, msg, type) {
-  document.getElementById(id).innerHTML = `<div class="alert ${type}">${msg}</div>`;
-}
+async function handleLogout() { await sb.auth.signOut(); }
+function showAlert(id,msg,type) { document.getElementById(id).innerHTML=`<div class="alert ${type}">${msg}</div>`; }
 
 // ── HUB TAB ───────────────────────────────────────────────────────────────────
 async function renderHubTab() {
-  const el = document.getElementById('hub-content');
+  const el = document.getElementById('tab-hub');
   if (currentProfile.account_type !== 'owner') {
     el.innerHTML = '<div class="empty"><div class="empty-icon">🔒</div><h3>Viewers cannot create hubs</h3><p>Upgrade to a Hub Owner account to manage your own inventory.</p></div>';
     return;
   }
   if (!currentHub) {
-    el.innerHTML = `
-      <div class="hub-setup">
-        <h2>Create Your Hub</h2>
-        <p>Give your inventory hub a name so others can find and recognise it.</p>
-        <div class="fg"><label class="fl">Hub Name</label><input class="fi" id="new-hub-name" placeholder="e.g. Sarah's Art Supplies"/></div>
-        <div class="fg"><label class="fl">Hub Label <span style="font-weight:500;text-transform:none;letter-spacing:0;font-size:11px">(optional)</span></label><input class="fi" id="new-hub-label" placeholder="e.g. Fabric Collection"/></div>
-        <button class="btn btn-p" onclick="createHub()">Create Hub</button>
-      </div>`;
+    el.innerHTML = `<div class="hub-setup"><h2>Create Your Hub</h2><p>Give your inventory hub a name so others can find and recognise it.</p><div class="fg"><label class="fl">Hub Name</label><input class="fi" id="new-hub-name" placeholder="e.g. Sarah's Art Supplies"/></div><div class="fg"><label class="fl">Hub Label <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px">(optional)</span></label><input class="fi" id="new-hub-label" placeholder="e.g. Fabric Collection"/></div><button class="btn btn-p" onclick="createHub()">Create Hub</button></div>`;
     return;
   }
-  const { data: items } = await sb.from('items').select('*').eq('hub_id', currentHub.id).order('created_at', { ascending: false });
-  currentItems = items || [];
-  renderHubContent();
+  const [itemsRes, catsRes] = await Promise.all([
+    sb.from('items').select('*').eq('hub_id', currentHub.id).order('created_at', {ascending: false}),
+    sb.from('categories').select('*, subgroups(*)').eq('hub_id', currentHub.id).order('name')
+  ]);
+  currentItems = itemsRes.data || [];
+  currentCategories = catsRes.data || [];
+  currentSubgroups = currentCategories.flatMap(c => (c.subgroups||[]).map(s => ({...s, category_name: c.name})));
+  renderHubLayout();
 }
 
-function renderHubContent() {
-  const el = document.getElementById('hub-content');
-  const filtered = filterItems(currentItems);
-  const allTags = [...new Set(currentItems.flatMap(i => i.tags || []))].sort();
-
+function renderHubLayout() {
+  const el = document.getElementById('tab-hub');
+  const accessType = currentHub.access_type || 'open';
   el.innerHTML = `
     <div class="hub-hdr">
-      <div class="hub-info">
-        <h2>${currentHub.name}</h2>
-        ${currentHub.label ? `<p>${currentHub.label}</p>` : ''}
-      </div>
+      <div class="hub-info"><h2>${currentHub.name}</h2>${currentHub.label?`<p>${currentHub.label}</p>`:''}</div>
       <div class="hub-actions">
-        <label class="discover-toggle">
-          <button class="toggle ${currentHub.is_discoverable ? 'on' : ''}" id="disc-toggle" onclick="toggleDiscoverable()"></button>
-          ${currentHub.is_discoverable ? 'Discoverable' : 'Hidden from search'}
+        <span class="access-badge ${accessType}">${accessType==='open'?'🌐 Open':'🔒 Restricted'}</span>
+        <label class="discover-toggle" style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--dimp)">
+          <button class="toggle ${currentHub.is_discoverable?'on':''}" onclick="toggleDiscoverable()" style="width:36px;height:20px;background:${currentHub.is_discoverable?'var(--mag)':'var(--pinkmid)'};border-radius:10px;cursor:pointer;position:relative;border:none;flex-shrink:0;transition:all var(--t)"><span style="position:absolute;top:3px;left:${currentHub.is_discoverable?'19':'3'}px;width:14px;height:14px;background:#fff;border-radius:50%;transition:all var(--t);display:block"></span></button>
+          ${currentHub.is_discoverable?'Discoverable':'Hidden'}
         </label>
-        <button class="add-btn btn-sm" onclick="openHubModal()">⚙ Settings</button>
+        <button class="add-btn navy btn-sm" onclick="openHubModal()">⚙ Settings</button>
+        <button class="add-btn navy btn-sm" onclick="openCatModal()">+ Category</button>
       </div>
     </div>
-    <div class="toolbar">
-      <div class="srch"><span class="srch-icon">🔍</span><input id="hub-search-input" placeholder="Search items or tags…" oninput="hubSearchLive(this.value)" value="${searchQuery}"/></div>
-      ${allTags.length ? `<div class="tagbar">${allTags.map(t => `<button class="ftag ${activeFilterTags.includes(t)?'on':''}" onclick="toggleFilterTag('${t}')">${t}</button>`).join('')}</div>` : ''}
-      <span class="cnt">${filtered.length} / ${currentItems.length} items</span>
-      <button class="ftag ${showUntagged ? 'on' : ''}" onclick="toggleUntagged()" style="background:${showUntagged?'var(--navy)':'rgba(255,255,255,0.65)'};border-color:${showUntagged?'var(--navy)':'var(--mag2)'};color:${showUntagged?'#fff':'var(--mag2)'}">⚠ No tags</button>
-      ${(activeFilterTags.length > 0 || searchQuery || showUntagged) ? '<button class="clear-btn" onclick="clearAllFilters()">✕ Clear filters</button>' : ''}
-      <button class="add-btn" onclick="openItemModal()">＋ Add Item</button>
-      <button class="add-btn" style="background:var(--navy2)" onclick="openBulkModal()">⬆ Bulk Upload</button>
-    </div>
-    <div class="grid" id="items-grid">
-      ${filtered.length === 0 ? `<div class="empty" style="grid-column:1/-1"><div class="empty-icon">📦</div><h3>${currentItems.length===0?'Your hub is empty':'No items match'}</h3><p>${currentItems.length===0?'Add your first item to get started':''}</p></div>` : filtered.map(item => renderItemCard(item, true)).join('')}
+    <div class="hub-layout">
+      <div class="cat-sidebar">
+        <div class="cat-sidebar-hdr"><span>Categories</span></div>
+        <div class="cat-item all ${!activeCategoryId?'active':''}" onclick="filterByCategory(null)">📦 All Items</div>
+        ${currentCategories.map(c => `
+          <div class="cat-item ${activeCategoryId===c.id?'active':''}" onclick="filterByCategory('${c.id}')">
+            ${c.name}
+            <span style="float:right;font-size:10px;color:var(--pinkdark);cursor:pointer" onclick="event.stopPropagation();deleteCategoryConfirm('${c.id}')">✕</span>
+          </div>
+          ${(c.subgroups||[]).map(s => `<div class="subgroup-item ${activeSubgroupId===s.id?'active':''}" onclick="filterBySubgroup('${c.id}','${s.id}')">${s.name}<span style="float:right;font-size:10px;color:var(--pinkdark);cursor:pointer" onclick="event.stopPropagation();deleteSubgroupConfirm('${s.id}')">✕</span></div>`).join('')}
+        `).join('')}
+      </div>
+      <div>
+        <div class="toolbar">
+          <div class="srch"><span class="srch-icon">🔍</span><input id="hub-search-input" placeholder="Search items or tags…" autocomplete="off"/></div>
+          <div class="tagbar" id="hub-tagbar"></div>
+          <span class="cnt" id="hub-cnt"></span>
+          <button class="add-btn" onclick="openItemModal()">＋ Add Item</button>
+          <button class="add-btn navy" onclick="openBulkModal()">⬆ Bulk Upload</button>
+        </div>
+        <div class="grid" id="items-grid"></div>
+      </div>
     </div>`;
+  const input = document.getElementById('hub-search-input');
+  if (input) input.addEventListener('input', function() { searchQuery=this.value; updateHubDynamic(); });
+  updateHubDynamic();
 }
 
+function filterByCategory(catId) {
+  activeCategoryId = catId; activeSubgroupId = null;
+  renderHubLayout();
+}
+function filterBySubgroup(catId, subId) {
+  activeCategoryId = catId; activeSubgroupId = subId;
+  renderHubLayout();
+}
+
+function updateHubDynamic() {
+  const allTags = [...new Set(currentItems.flatMap(i => i.tags||[]))].sort();
+  const filtered = filterItems(currentItems);
+  const tagbar = document.getElementById('hub-tagbar');
+  if (tagbar) tagbar.innerHTML = allTags.map(t=>`<button class="ftag ${activeFilterTags.includes(t)?'on':''}" onclick="toggleFilterTag('${t}')">${t}</button>`).join('') +
+    `<button class="ftag ${showUntagged?'on':''}" onclick="toggleUntagged()" style="background:${showUntagged?'var(--navy)':'rgba(255,255,255,0.65)'};border-color:${showUntagged?'var(--navy)':'var(--mag2)'};color:${showUntagged?'#fff':'var(--mag2)'}">⚠ No tags</button>` +
+    ((activeFilterTags.length>0||searchQuery||showUntagged)?'<button class="clear-btn" onclick="clearAllFilters()">✕ Clear</button>':'');
+  const cnt = document.getElementById('hub-cnt');
+  if (cnt) cnt.textContent = filtered.length+' / '+currentItems.length+' items';
+  const grid = document.getElementById('items-grid');
+  if (grid) grid.innerHTML = filtered.length===0
+    ? `<div class="empty" style="grid-column:1/-1"><div class="empty-icon">📦</div><h3>${currentItems.length===0?'Your hub is empty':'No items match'}</h3><p>${currentItems.length===0&&currentProfile.account_type==='owner'?'Add your first item to get started':''}</p></div>`
+    : filtered.map(item=>renderItemCard(item,true)).join('');
+}
+
+function fuzzyMatch(text, query) {
+  if (!query) return true;
+  text=text.toLowerCase(); query=query.toLowerCase();
+  if (text.includes(query)) return true;
+  let ti=0,qi=0;
+  while(ti<text.length&&qi<query.length){if(text[ti]===query[qi])qi++;ti++;}
+  return qi===query.length;
+}
+function highlightMatch(text, query) {
+  if (!query) return text;
+  const idx=text.toLowerCase().indexOf(query.toLowerCase());
+  if (idx===-1) return text;
+  return text.slice(0,idx)+'<mark>'+text.slice(idx,idx+query.length)+'</mark>'+text.slice(idx+query.length);
+}
+function filterItems(items) {
+  return items.filter(i => {
+    const q=searchQuery.trim();
+    const matchSearch=!q||fuzzyMatch(i.name,q)||(i.tags||[]).some(t=>fuzzyMatch(t,q));
+    const matchTags=activeFilterTags.length===0||activeFilterTags.every(t=>(i.tags||[]).includes(t));
+    const matchUntagged=!showUntagged||!i.tags||i.tags.length===0;
+    const matchCat=!activeCategoryId||i.category_id===activeCategoryId;
+    const matchSub=!activeSubgroupId||i.subgroup_id===activeSubgroupId;
+    return matchSearch&&matchTags&&matchUntagged&&matchCat&&matchSub;
+  });
+}
+function toggleFilterTag(tag) { activeFilterTags=activeFilterTags.includes(tag)?activeFilterTags.filter(t=>t!==tag):[...activeFilterTags,tag]; updateHubDynamic(); }
+function toggleUntagged() { showUntagged=!showUntagged; activeFilterTags=[]; searchQuery=''; const i=document.getElementById('hub-search-input'); if(i)i.value=''; updateHubDynamic(); }
+function clearAllFilters() { searchQuery=''; activeFilterTags=[]; showUntagged=false; const i=document.getElementById('hub-search-input'); if(i)i.value=''; updateHubDynamic(); }
+
 function renderItemCard(item, editable) {
-  const imgHtml = item.image_url ? `<img src="${item.image_url}" alt="${item.name}" onerror="this.parentNode.innerHTML='📦'"/>` : '📦';
-  const q = searchQuery.trim();
-  const displayName = highlightMatch(item.name, q);
-  const tagsHtml = (item.tags||[]).map(t => `<span class="chip">${highlightMatch(t, q)}</span>`).join('');
-  const acts = editable ? `<div class="card-acts"><button class="ic-btn" onclick="event.stopPropagation();openItemModal('${item.id}')">✏️</button><button class="ic-btn del" onclick="event.stopPropagation();deleteItem('${item.id}')">🗑️</button></div>` : '';
+  const q=searchQuery.trim();
+  const displayName=highlightMatch(item.name,q);
+  const cat=currentCategories.find(c=>c.id===item.category_id);
+  const sub=currentSubgroups.find(s=>s.id===item.subgroup_id);
+  const catLabel=cat?`<div class="card-cat">${cat.name}${sub?' › '+sub.name:''}</div>`:'';
+  const imgHtml=item.image_url?`<img src="${item.image_url}" alt="${item.name}" onerror="this.parentNode.innerHTML='📦'"/>`:'📦';
+  const tagsHtml=(item.tags||[]).map(t=>`<span class="chip">${highlightMatch(t,q)}</span>`).join('');
+  const acts=editable?`<div class="card-acts"><button class="ic-btn" onclick="event.stopPropagation();openItemModal('${item.id}')">✏️</button><button class="ic-btn del" onclick="event.stopPropagation();deleteItem('${item.id}')">🗑️</button></div>`:'';
   return `<div class="card" onclick="openLightbox('${item.id}')">
     <div class="card-img">${imgHtml}</div>
     <div class="card-body">
       <div class="card-name">${displayName}</div>
-      ${item.product_code ? `<div class="card-code">${item.product_code}</div>` : ''}
-      ${item.owner_name ? `<div class="card-owner">by ${item.owner_name}</div>` : ''}
-      ${tagsHtml ? `<div class="card-tags">${tagsHtml}</div>` : ''}
+      ${item.product_code?`<div class="card-code">${item.product_code}</div>`:''}
+      ${catLabel}
+      ${item.owner_name?`<div class="card-owner">by ${item.owner_name}</div>`:''}
+      ${tagsHtml?`<div class="card-tags">${tagsHtml}</div>`:''}
       ${acts}
     </div>
   </div>`;
 }
 
-function fuzzyMatch(text, query) {
-  if (!query) return true;
-  text = text.toLowerCase();
-  query = query.toLowerCase();
-  // Direct partial match first
-  if (text.includes(query)) return true;
-  // Fuzzy: all characters of query appear in order in text
-  let ti = 0, qi = 0;
-  while (ti < text.length && qi < query.length) {
-    if (text[ti] === query[qi]) qi++;
-    ti++;
-  }
-  return qi === query.length;
-}
-
-function filterItems(items) {
-  return items.filter(i => {
-    const q = searchQuery.trim();
-    const matchSearch = !q ||
-      fuzzyMatch(i.name, q) ||
-      (i.tags||[]).some(t => fuzzyMatch(t, q));
-    const matchTags = activeFilterTags.length === 0 ||
-      activeFilterTags.every(t => (i.tags||[]).includes(t));
-    const matchUntagged = !showUntagged || !i.tags || i.tags.length === 0;
-    return matchSearch && matchTags && matchUntagged;
-  });
-}
-
-function highlightMatch(text, query) {
-  if (!query) return text;
-  const idx = text.toLowerCase().indexOf(query.toLowerCase());
-  if (idx === -1) return text;
-  return text.slice(0, idx) + '<mark>' + text.slice(idx, idx + query.length) + '</mark>' + text.slice(idx + query.length);
-}
-
-function hubSearchLive(val) {
-  searchQuery = val;
-  const input = document.getElementById('hub-search-input');
-  const cursor = input ? input.selectionStart : null;
-  renderHubContent();
-  // Restore focus and cursor position after render
-  const restored = document.getElementById('hub-search-input');
-  if (restored && cursor !== null) {
-    restored.focus();
-    restored.setSelectionRange(cursor, cursor);
-  }
-}
-
-function toggleUntagged() {
-  showUntagged = !showUntagged;
-  activeFilterTags = [];
-  searchQuery = '';
-  const input = document.getElementById('hub-search-input');
-  if (input) input.value = '';
-  updateHubDynamic();
-}
-function clearAllFilters() {
-  searchQuery = '';
-  activeFilterTags = [];
-  showUntagged = false;
-  const input = document.getElementById('hub-search-input');
-  if (input) input.value = '';
-  // Force full rebuild
-  const grid = document.getElementById('items-grid');
-  if (grid) grid.closest('#hub-content').innerHTML = '';
-  renderHubContent();
-}
-
-
-function toggleFilterTag(tag) {
-  activeFilterTags = activeFilterTags.includes(tag) ? activeFilterTags.filter(t=>t!==tag) : [...activeFilterTags, tag];
-  updateHubDynamic();
-}
-
 async function createHub() {
-  const name = document.getElementById('new-hub-name').value.trim();
-  const label = document.getElementById('new-hub-label').value.trim();
-  if (!name) return showToast('Please enter a hub name', 'error');
-  const { data, error } = await sb.from('hubs').insert({ owner_id: currentUser.id, name, label }).select().single();
-  if (error) return showToast(error.message, 'error');
-  currentHub = data;
-  await renderHubTab();
-  showToast('Hub created!');
+  const name=document.getElementById('new-hub-name').value.trim(), label=document.getElementById('new-hub-label').value.trim();
+  if(!name) return showToast('Please enter a hub name','error');
+  const {data,error}=await sb.from('hubs').insert({owner_id:currentUser.id,name,label,access_type:'open'}).select().single();
+  if(error) return showToast(error.message,'error');
+  currentHub=data; await renderHubTab(); showToast('Hub created!');
 }
-
 async function toggleDiscoverable() {
-  const newVal = !currentHub.is_discoverable;
-  await sb.from('hubs').update({ is_discoverable: newVal }).eq('id', currentHub.id);
-  currentHub.is_discoverable = newVal;
-  renderHubContent();
-  showToast(newVal ? 'Hub is now discoverable' : 'Hub is now hidden');
+  const newVal=!currentHub.is_discoverable;
+  await sb.from('hubs').update({is_discoverable:newVal}).eq('id',currentHub.id);
+  currentHub.is_discoverable=newVal; renderHubLayout(); showToast(newVal?'Hub is now discoverable':'Hub is now hidden');
 }
 
 // ── HUB SETTINGS ──────────────────────────────────────────────────────────────
 function openHubModal() {
-  document.getElementById('hub-name-input').value = currentHub.name || '';
-  document.getElementById('hub-label-input').value = currentHub.label || '';
-  document.getElementById('hub-modal').style.display = 'flex';
-}
-function closeHubModal(e) {
-  if (!e || e.target === document.getElementById('hub-modal')) document.getElementById('hub-modal').style.display = 'none';
+  document.getElementById('hub-name-input').value=currentHub.name||'';
+  document.getElementById('hub-label-input').value=currentHub.label||'';
+  selectedAccess=currentHub.access_type||'open';
+  selectAccess(selectedAccess);
+  document.getElementById('hub-modal').style.display='flex';
 }
 async function saveHubSettings() {
-  const name = document.getElementById('hub-name-input').value.trim();
-  const label = document.getElementById('hub-label-input').value.trim();
-  if (!name) return showToast('Hub name is required', 'error');
-  await sb.from('hubs').update({ name, label }).eq('id', currentHub.id);
-  currentHub.name = name; currentHub.label = label;
-  closeHubModal();
-  renderHubContent();
-  showToast('Hub settings saved');
+  const name=document.getElementById('hub-name-input').value.trim(), label=document.getElementById('hub-label-input').value.trim();
+  if(!name) return showToast('Hub name is required','error');
+  await sb.from('hubs').update({name,label,access_type:selectedAccess}).eq('id',currentHub.id);
+  currentHub.name=name; currentHub.label=label; currentHub.access_type=selectedAccess;
+  closeModal('hub-modal'); renderHubLayout(); showToast('Hub settings saved');
+}
+function copyPrivateLink() {
+  const link=window.location.origin+'?hub='+currentHub.private_token;
+  navigator.clipboard.writeText(link).then(()=>showToast('Private link copied!'));
+}
+
+// ── CATEGORIES ────────────────────────────────────────────────────────────────
+function openCatModal(catId) {
+  editingCategoryId=catId||null; pendingSubgroups=[];
+  document.getElementById('cat-modal-title').textContent=catId?'Edit Category':'Add Category';
+  document.getElementById('cat-name-input').value=catId?(currentCategories.find(c=>c.id===catId)?.name||''):'';
+  document.getElementById('subgroup-input').value='';
+  document.getElementById('subgroups-preview').innerHTML='';
+  document.getElementById('subgroup-section').style.display='block';
+  document.getElementById('cat-modal').style.display='flex';
+}
+function addSubgroupInput() {
+  const val=document.getElementById('subgroup-input').value.trim();
+  if(val&&!pendingSubgroups.includes(val)){pendingSubgroups.push(val);renderSubgroupsPreview();}
+  document.getElementById('subgroup-input').value='';
+}
+function renderSubgroupsPreview() {
+  document.getElementById('subgroups-preview').innerHTML=pendingSubgroups.map(s=>`<span class="tpill">${s}<button onclick="pendingSubgroups=pendingSubgroups.filter(x=>x!=='${s}');renderSubgroupsPreview()">✕</button></span>`).join('');
+}
+async function saveCategoryModal() {
+  const name=document.getElementById('cat-name-input').value.trim();
+  if(!name) return showToast('Category name is required','error');
+  let catId=editingCategoryId;
+  if(!catId){
+    const {data,error}=await sb.from('categories').insert({hub_id:currentHub.id,name}).select().single();
+    if(error) return showToast(error.message,'error');
+    catId=data.id;
+  } else {
+    await sb.from('categories').update({name}).eq('id',catId);
+  }
+  if(pendingSubgroups.length>0){
+    await sb.from('subgroups').insert(pendingSubgroups.map(n=>({hub_id:currentHub.id,category_id:catId,name:n})));
+  }
+  closeModal('cat-modal'); await renderHubTab(); showToast('Category saved');
+}
+async function deleteCategoryConfirm(catId) {
+  if(!confirm('Delete this category and all its sub-groups? Items will be uncategorised.')) return;
+  await sb.from('categories').delete().eq('id',catId);
+  if(activeCategoryId===catId){activeCategoryId=null;activeSubgroupId=null;}
+  await renderHubTab(); showToast('Category deleted');
+}
+async function deleteSubgroupConfirm(subId) {
+  if(!confirm('Delete this sub-group? Items will be uncategorised.')) return;
+  await sb.from('subgroups').delete().eq('id',subId);
+  if(activeSubgroupId===subId) activeSubgroupId=null;
+  await renderHubTab(); showToast('Sub-group deleted');
 }
 
 // ── ITEM MODAL ────────────────────────────────────────────────────────────────
-function openItemModal(itemId) {
-  editingItemId = itemId || null;
-  currentTags = [];
-  currentImage = null;
-  document.getElementById('item-modal-title').textContent = itemId ? 'Edit Item' : 'Add Item';
-  document.getElementById('item-name').value = '';
-  document.getElementById('item-code').value = '';
-  document.getElementById('tag-input').value = '';
-  document.getElementById('tags-list').innerHTML = '';
-  document.getElementById('item-form-alert').innerHTML = '';
-  document.getElementById('upload-area').style.display = 'block';
-  document.getElementById('preview-area').style.display = 'none';
-  document.getElementById('uzone').classList.remove('drag');
+async function openItemModal(itemId) {
+  editingItemId=itemId||null; currentTags=[]; currentImage=null;
+  document.getElementById('item-modal-title').textContent=itemId?'Edit Item':'Add Item';
+  document.getElementById('item-name').value='';
+  document.getElementById('item-code').value='';
+  document.getElementById('tag-input').value='';
+  document.getElementById('tags-list').innerHTML='';
+  document.getElementById('item-form-alert').innerHTML='';
+  document.getElementById('upload-area').style.display='block';
+  document.getElementById('preview-area').style.display='none';
 
-  if (itemId) {
-    const item = currentItems.find(i => i.id === itemId);
-    if (item) {
-      document.getElementById('item-name').value = item.name;
-      document.getElementById('item-code').value = item.product_code || '';
-      currentTags = [...(item.tags || [])];
-      renderTagsList();
-      if (item.image_url) {
-        currentImage = item.image_url;
-        document.getElementById('img-preview').src = item.image_url;
-        document.getElementById('upload-area').style.display = 'none';
-        document.getElementById('preview-area').style.display = 'block';
-      }
+  // Load categories into dropdown
+  const catSel=document.getElementById('item-category');
+  catSel.innerHTML='<option value="">No category</option>'+currentCategories.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  document.getElementById('item-subgroup').innerHTML='<option value="">No sub-group</option>';
+
+  if(itemId){
+    const item=currentItems.find(i=>i.id===itemId);
+    if(item){
+      document.getElementById('item-name').value=item.name;
+      document.getElementById('item-code').value=item.product_code||'';
+      currentTags=[...(item.tags||[])]; renderTagsList();
+      if(item.category_id){ catSel.value=item.category_id; await loadSubgroups(item.category_id, item.subgroup_id); }
+      if(item.image_url){ currentImage=item.image_url; document.getElementById('img-preview').src=item.image_url; document.getElementById('upload-area').style.display='none'; document.getElementById('preview-area').style.display='block'; }
     }
   }
-  document.getElementById('item-modal').style.display = 'flex';
+  document.getElementById('item-modal').style.display='flex';
 }
-function closeItemModal(e) {
-  if (!e || e.target === document.getElementById('item-modal')) document.getElementById('item-modal').style.display = 'none';
+async function loadSubgroups(catId, selectedSubId) {
+  const sel=document.getElementById('item-subgroup');
+  if(!catId){sel.innerHTML='<option value="">No sub-group</option>';return;}
+  const cat=currentCategories.find(c=>c.id===catId);
+  const subs=cat?.subgroups||[];
+  sel.innerHTML='<option value="">No sub-group</option>'+subs.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+  if(selectedSubId) sel.value=selectedSubId;
 }
-function handleFile(file) {
-  if (!file || !file.type.startsWith('image/')) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    currentImage = e.target.result;
-    document.getElementById('img-preview').src = currentImage;
-    document.getElementById('upload-area').style.display = 'none';
-    document.getElementById('preview-area').style.display = 'block';
-    document.getElementById('uzone').classList.remove('drag');
-  };
-  reader.readAsDataURL(file);
-}
-function handleDrop(e) {
-  e.preventDefault();
-  document.getElementById('uzone').classList.remove('drag');
-  handleFile(e.dataTransfer.files[0]);
-}
-function removeImage() {
-  currentImage = null;
-  document.getElementById('upload-area').style.display = 'block';
-  document.getElementById('preview-area').style.display = 'none';
-}
-function addTag() {
-  const input = document.getElementById('tag-input');
-  const tag = input.value.trim().toLowerCase().replace(/\s+/g, '-');
-  if (tag && !currentTags.includes(tag)) { currentTags.push(tag); renderTagsList(); }
-  input.value = '';
-}
-function removeTag(tag) {
-  currentTags = currentTags.filter(t => t !== tag);
-  renderTagsList();
-}
-function renderTagsList() {
-  document.getElementById('tags-list').innerHTML = currentTags.map(t =>
-    `<span class="tpill">${t}<button onclick="removeTag('${t}')">✕</button></span>`).join('');
-}
+function handleFile(file) { if(!file||!file.type.startsWith('image/'))return; const r=new FileReader(); r.onload=e=>{currentImage=e.target.result;document.getElementById('img-preview').src=currentImage;document.getElementById('upload-area').style.display='none';document.getElementById('preview-area').style.display='block';document.getElementById('uzone').classList.remove('drag');}; r.readAsDataURL(file); }
+function handleDrop(e) { e.preventDefault(); document.getElementById('uzone').classList.remove('drag'); handleFile(e.dataTransfer.files[0]); }
+function removeImage() { currentImage=null; document.getElementById('upload-area').style.display='block'; document.getElementById('preview-area').style.display='none'; }
+function addTag() { const input=document.getElementById('tag-input'); const tag=input.value.trim().toLowerCase().replace(/\s+/g,'-'); if(tag&&!currentTags.includes(tag)){currentTags.push(tag);renderTagsList();} input.value=''; }
+function removeTag(tag) { currentTags=currentTags.filter(t=>t!==tag); renderTagsList(); }
+function renderTagsList() { document.getElementById('tags-list').innerHTML=currentTags.map(t=>`<span class="tpill">${t}<button onclick="removeTag('${t}')">✕</button></span>`).join(''); }
+
 async function saveItem() {
-  const name = document.getElementById('item-name').value.trim();
-  if (!name) return showAlert('item-form-alert', 'Please enter an item name.', 'error');
-  const code = document.getElementById('item-code').value.trim();
-  const data = { hub_id: currentHub.id, name, product_code: code, tags: currentTags, image_url: currentImage };
-  if (editingItemId) {
-    const { error } = await sb.from('items').update(data).eq('id', editingItemId);
-    if (error) return showAlert('item-form-alert', error.message, 'error');
+  const name=document.getElementById('item-name').value.trim();
+  if(!name) return showAlert('item-form-alert','Please enter an item name.','error');
+  const code=document.getElementById('item-code').value.trim();
+  const catId=document.getElementById('item-category').value||null;
+  const subId=document.getElementById('item-subgroup').value||null;
+  const data={hub_id:currentHub.id,name,product_code:code||null,tags:currentTags,image_url:currentImage,category_id:catId,subgroup_id:subId};
+  if(editingItemId){
+    const {error}=await sb.from('items').update(data).eq('id',editingItemId);
+    if(error) return showAlert('item-form-alert',error.message,'error');
     showToast('Item updated');
   } else {
-    const { error } = await sb.from('items').insert(data);
-    if (error) return showAlert('item-form-alert', error.message, 'error');
+    const {error}=await sb.from('items').insert(data);
+    if(error) return showAlert('item-form-alert',error.message,'error');
     showToast('Item added');
   }
-  closeItemModal();
-  const { data: items } = await sb.from('items').select('*').eq('hub_id', currentHub.id).order('created_at', { ascending: false });
-  currentItems = items || [];
-  renderHubContent();
+  closeModal('item-modal');
+  const {data:items}=await sb.from('items').select('*').eq('hub_id',currentHub.id).order('created_at',{ascending:false});
+  currentItems=items||[]; updateHubDynamic();
 }
 async function deleteItem(id) {
-  if (!confirm('Remove this item?')) return;
-  await sb.from('items').delete().eq('id', id);
-  currentItems = currentItems.filter(i => i.id !== id);
-  renderHubContent();
-  showToast('Item removed');
+  if(!confirm('Remove this item?'))return;
+  await sb.from('items').delete().eq('id',id);
+  currentItems=currentItems.filter(i=>i.id!==id); updateHubDynamic(); showToast('Item removed');
 }
 
 // ── LIGHTBOX ──────────────────────────────────────────────────────────────────
 function openLightbox(itemId) {
-  const allItems = window._browseItems || currentItems;
-  const item = allItems.find(i => i.id === itemId);
-  if (!item) return;
-  document.getElementById('lbox-name').textContent = item.name;
-  document.getElementById('lbox-owner').textContent = item.owner_name ? `by ${item.owner_name}` : '';
-  const img = document.getElementById('lbox-img');
-  if (item.image_url) { img.src = item.image_url; img.style.display = 'block'; } else { img.style.display = 'none'; }
-  document.getElementById('lbox-tags').innerHTML = (item.tags||[]).map(t =>
-    `<span class="chip" style="background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.35);color:#fff">${t}</span>`).join('');
-  document.getElementById('lightbox').style.display = 'flex';
+  const items=[...currentItems,...(allBrowseItems||[])];
+  const item=items.find(i=>i.id===itemId);
+  if(!item)return;
+  document.getElementById('lbox-name').textContent=item.name;
+  document.getElementById('lbox-code').textContent=item.product_code||'';
+  document.getElementById('lbox-owner').textContent=item.owner_name?`by ${item.owner_name}`:'';
+  const img=document.getElementById('lbox-img');
+  if(item.image_url){img.src=item.image_url;img.style.display='block';}else{img.style.display='none';}
+  document.getElementById('lbox-tags').innerHTML=(item.tags||[]).map(t=>`<span class="chip" style="background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.35);color:#fff">${t}</span>`).join('');
+  document.getElementById('lightbox').style.display='flex';
 }
-function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; }
-
-
-// ── BULK UPLOAD ───────────────────────────────────────────────────────────────
-let parsedCsvItems = [];
-
-function openBulkModal() {
-  parsedCsvItems = [];
-  document.getElementById('bulk-tag').value = '';
-  document.getElementById('bulk-alert').innerHTML = '';
-  document.getElementById('csv-preview').style.display = 'none';
-  document.getElementById('bulk-save-btn').style.display = 'none';
-  document.getElementById('csv-zone').classList.remove('drag');
-  document.getElementById('csv-input').value = '';
-  document.getElementById('bulk-modal').style.display = 'flex';
-}
-function closeBulkModal(e) {
-  if (!e || e.target === document.getElementById('bulk-modal'))
-    document.getElementById('bulk-modal').style.display = 'none';
-}
-
-function downloadTemplate() {
-  // Build 20-row CSV (2 examples + 18 blank)
-  const headers = 'Product Name,Product Code,Tag 1,Tag 2,Tag 3,Tag 4,Tag 5';
-  const row1 = 'Example Product Name,EX-001,autumn,paper,red,,';
-  const row2 = 'Another Example Product,EX-002,autumn,,,,'
-  const blankRow = ',,,,,,'
-  const blankRows = Array(18).fill(blankRow).join('\n');
-  const csv = [headers, row1, row2, blankRows].join('\n');
-
-  // Generate as an HTML file that opens in Excel with column widths set
-  const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-<head><meta charset="UTF-8">
-<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>
-<x:Name>My Stock Hub</x:Name>
-<x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>
-</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
-<style>
-  td { mso-number-format:"@"; font-family: Calibri, Arial, sans-serif; font-size: 11pt; padding: 4px 8px; }
-  th { background: #c0006a; color: white; font-weight: bold; font-family: Calibri, Arial, sans-serif; font-size: 11pt; padding: 4px 8px; mso-number-format:"@"; }
-  .ex { background: #fdf0f5; color: #5a1858; font-style: italic; }
-  col.wide { mso-width-source: userset; mso-width-alt: 6400; width: 220pt; }
-  col.med { mso-width-source: userset; mso-width-alt: 3200; width: 120pt; }
-  col.tag { mso-width-source: userset; mso-width-alt: 3200; width: 120pt; }
-</style>
-</head><body>
-<table border="1" style="border-collapse:collapse">
-  <colgroup>
-    <col class="wide"/>
-    <col class="med"/>
-    <col class="tag"/><col class="tag"/><col class="tag"/><col class="tag"/><col class="tag"/>
-  </colgroup>
-  <tr>
-    <th>Product Name</th><th>Product Code</th>
-    <th>Tag 1</th><th>Tag 2</th><th>Tag 3</th><th>Tag 4</th><th>Tag 5</th>
-  </tr>
-  <tr class="ex"><td>Example Product Name</td><td>EX-001</td><td>autumn</td><td>paper</td><td>red</td><td></td><td></td></tr>
-  <tr class="ex"><td>Another Example Product</td><td>EX-002</td><td>autumn</td><td></td><td></td><td></td><td></td></tr>
-  ${Array(18).fill('<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>').join('')}
-</table></body></html>`;
-
-  const blob = new Blob([html], { type: 'application/vnd.ms-excel;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'mystockhub-template.xls'; a.click();
-  URL.revokeObjectURL(url);
-  showToast('Template downloaded');
-}
-
-function handleCsvDrop(e) {
-  e.preventDefault();
-  document.getElementById('csv-zone').classList.remove('drag');
-  handleCsvFile(e.dataTransfer.files[0]);
-}
-
-function handleCsvFile(file) {
-  if (!file || !file.name.endsWith('.csv')) return showAlert('bulk-alert', 'Please upload a .csv file.', 'error');
-  const reader = new FileReader();
-  reader.onload = e => parseCsv(e.target.result);
-  reader.readAsText(file);
-}
-
-function parseCsv(text) {
-  const lines = text.trim().split('\n').filter(l => l.trim());
-  if (lines.length < 2) return showAlert('bulk-alert', 'CSV must have a header row and at least one product.', 'error');
-  const header = lines[0].toLowerCase().split(',').map(h => h.trim().replace(/"/g,''));
-  const nameIdx = header.findIndex(h => h.includes('name'));
-  const codeIdx = header.findIndex(h => h.includes('code'));
-  // Find all tag columns (tag 1, tag 2, tag 3, tag 4, tag 5)
-  const tagIdxs = header.reduce((acc, h, i) => { if (h.includes('tag')) acc.push(i); return acc; }, []);
-  if (nameIdx === -1) return showAlert('bulk-alert', 'CSV must have a "Product Name" column.', 'error');
-  
-  parsedCsvItems = [];
-  const tbody = document.getElementById('csv-table-body');
-  tbody.innerHTML = '';
-
-  // Handle CSV lines respecting quoted fields
-  function parseCsvLine(line) {
-    const result = [];
-    let current = '';
-    let inQuotes = false;
-    for (let i = 0; i < line.length; i++) {
-      if (line[i] === '"') { inQuotes = !inQuotes; continue; }
-      if (line[i] === ',' && !inQuotes) { result.push(current.trim()); current = ''; continue; }
-      current += line[i];
-    }
-    result.push(current.trim());
-    return result;
-  }
-  
-  for (let i = 1; i < lines.length; i++) {
-    const cols = parseCsvLine(lines[i]);
-    const name = cols[nameIdx] || '';
-    const code = codeIdx !== -1 ? (cols[codeIdx] || '') : '';
-    const itemTags = tagIdxs.map(ti => (cols[ti] || '').trim().toLowerCase().replace(/\s+/g,'-')).filter(Boolean);
-    if (!name) continue;
-    parsedCsvItems.push({ name, product_code: code, tags: itemTags });
-    const valid = name.length > 0;
-    tbody.innerHTML += `<tr style="border-top:1px solid var(--pinkmid)">
-      <td style="padding:7px 12px;font-weight:600;color:var(--navy)">${name}</td>
-      <td style="padding:7px 12px;color:var(--dimp)">${code || '—'}</td>
-      <td style="padding:7px 12px;color:var(--dimp);font-size:11px">${itemTags.length ? itemTags.join(', ') : '—'}</td>
-      <td style="padding:7px 12px"><span style="color:${valid?'var(--success)':'var(--danger)'};font-weight:700;font-size:11px">${valid?'✓ Ready':'✗ No name'}</span></td>
-    </tr>`;
-  }
-  
-  document.getElementById('csv-count').textContent = `${parsedCsvItems.length} item${parsedCsvItems.length===1?'':'s'} ready to import`;
-  document.getElementById('csv-preview').style.display = 'block';
-  document.getElementById('bulk-save-btn').style.display = parsedCsvItems.length > 0 ? 'block' : 'none';
-  document.getElementById('bulk-alert').innerHTML = '';
-}
-
-async function saveBulkItems() {
-  if (!parsedCsvItems.length) return;
-  const sharedTag = document.getElementById('bulk-tag').value.trim().toLowerCase().replace(/\s+/g,'-');
-  const btn = document.getElementById('bulk-save-btn');
-  btn.textContent = 'Uploading…'; btn.disabled = true;
-  
-  const itemsToInsert = parsedCsvItems.map(item => {
-    const allTags = [...(item.tags || [])];
-    if (sharedTag && !allTags.includes(sharedTag)) allTags.unshift(sharedTag);
-    return {
-      hub_id: currentHub.id,
-      name: item.name,
-      product_code: item.product_code || null,
-      tags: allTags,
-      image_url: null
-    };
-  });
-  
-  const { error } = await sb.from('items').insert(itemsToInsert);
-  if (error) {
-    btn.textContent = 'Upload All Items'; btn.disabled = false;
-    return showAlert('bulk-alert', error.message, 'error');
-  }
-  
-  closeBulkModal();
-  const { data: items } = await sb.from('items').select('*').eq('hub_id', currentHub.id).order('created_at', { ascending: false });
-  currentItems = items || [];
-  renderHubContent();
-  showToast(`${parsedCsvItems.length} items uploaded successfully`);
-  btn.textContent = 'Upload All Items'; btn.disabled = false;
-}
+function closeLightbox(){document.getElementById('lightbox').style.display='none';}
 
 // ── BROWSE TAB ────────────────────────────────────────────────────────────────
 async function renderBrowseTab() {
-  const el = document.getElementById('browse-content');
-  el.innerHTML = `
+  const el=document.getElementById('tab-browse');
+  el.innerHTML=`
     <h2 class="section-title">Browse Hubs</h2>
     <div class="browse-filters">
       <div class="fg"><label class="fl">Search items or tags</label><input class="fi" id="browse-search" placeholder="e.g. fabric, blue, canvas…"/></div>
-      <div class="fg"><label class="fl">Country</label>
-        <select class="fi" id="browse-country">
-          <option value="">All countries</option>
-          <option>Australia</option><option>Canada</option><option>France</option><option>Germany</option>
-          <option>Ireland</option><option>Italy</option><option>New Zealand</option><option>South Africa</option>
-          <option>Spain</option><option>United Kingdom</option><option>United States</option><option>Other</option>
-        </select>
-      </div>
+      <div class="fg"><label class="fl">Country</label><select class="fi" id="browse-country"><option value="">All countries</option><option>Australia</option><option>Canada</option><option>France</option><option>Germany</option><option>Ireland</option><option>Italy</option><option>New Zealand</option><option>South Africa</option><option>Spain</option><option>United Kingdom</option><option>United States</option><option>Other</option></select></div>
       <div class="fg"><label class="fl">State / Region</label><input class="fi" id="browse-state" placeholder="Any"/></div>
       <div class="fg"><label class="fl">Town / City</label><input class="fi" id="browse-town" placeholder="Any"/></div>
-      <div class="fg" style="justify-content:flex-end;margin-bottom:0">
-        <label style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--navy);cursor:pointer;white-space:nowrap">
-          <input type="checkbox" id="browse-untagged" style="width:16px;height:16px;accent-color:var(--mag)"/>
-          Show untagged only
-        </label>
-      </div>
+      <div class="fg" style="justify-content:flex-end;margin-bottom:0"><label style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--navy);cursor:pointer;white-space:nowrap"><input type="checkbox" id="browse-untagged" style="width:16px;height:16px;accent-color:var(--mag)"/> Show untagged only</label></div>
       <button class="btn btn-p btn-sm" style="width:auto;margin-top:0" onclick="searchHubs()">Search</button>
     </div>
-    <div id="browse-results">
-      <div class="empty">
-        <div class="empty-icon">🔍</div>
-        <h3>Search to discover items</h3>
-        <p>Enter a keyword, tag or location above and hit Search to browse across all hubs.</p>
-      </div>
-    </div>`;
-
-  // Allow Enter key in search box to trigger search
-  const browseInput = document.getElementById('browse-search');
-  if (browseInput) {
-    browseInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchHubs(); });
-  }
+    <div id="browse-results"><div class="empty"><div class="empty-icon">🔍</div><h3>Search to discover items</h3><p>Enter a keyword, tag or location above and hit Search to browse across all hubs.</p></div></div>`;
+  const browseInput=document.getElementById('browse-search');
+  if(browseInput) browseInput.addEventListener('keydown',e=>{if(e.key==='Enter')searchHubs();});
 }
 
 async function searchHubs() {
-  const el = document.getElementById('browse-results');
-  el.innerHTML = '<div class="empty"><div class="spinner"></div></div>';
-  const q = (document.getElementById('browse-search')?.value||'').trim().toLowerCase();
-  const country = document.getElementById('browse-country')?.value||'';
-  const state = (document.getElementById('browse-state')?.value||'').trim().toLowerCase();
-  const town = (document.getElementById('browse-town')?.value||'').trim().toLowerCase();
+  const el=document.getElementById('browse-results');
+  el.innerHTML='<div class="empty"><div class="spinner"></div></div>';
+  const q=(document.getElementById('browse-search')?.value||'').trim();
+  const country=document.getElementById('browse-country')?.value||'';
+  const state=(document.getElementById('browse-state')?.value||'').trim().toLowerCase();
+  const town=(document.getElementById('browse-town')?.value||'').trim().toLowerCase();
+  const browseUntagged=document.getElementById('browse-untagged')?.checked;
 
-  let hubQuery = sb.from('hubs').select('*, profiles(full_name, country, state, town)').eq('is_discoverable', true);
-  const { data: allHubs } = await hubQuery;
-  // Exclude the current user's own hub from browse results
-  const hubs = (allHubs || []).filter(h => h.owner_id !== currentUser?.id);
-  if (!hubs || hubs.length === 0) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><h3>No hubs found</h3><p>No hubs are discoverable yet.</p></div>';
-    return;
-  }
-  const filteredHubs = hubs.filter(h => {
-    const p = h.profiles || {};
-    if (country && p.country !== country) return false;
-    if (state && !(p.state||'').toLowerCase().includes(state)) return false;
-    if (town && !(p.town||'').toLowerCase().includes(town)) return false;
+  const {data:allHubs}=await sb.from('hubs').select('*, profiles(full_name,country,state,town)').eq('is_discoverable',true);
+  const hubs=(allHubs||[]).filter(h=>{
+    if(h.owner_id===currentUser?.id)return false;
+    if(h.access_type==='restricted'){
+      // Only show restricted hubs if user has approved access
+      return false; // We'll handle this separately below
+    }
+    const p=h.profiles||{};
+    if(country&&p.country!==country)return false;
+    if(state&&!(p.state||'').toLowerCase().includes(state))return false;
+    if(town&&!(p.town||'').toLowerCase().includes(town))return false;
     return true;
   });
-  if (filteredHubs.length === 0) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><h3>No hubs match your filters</h3><p>Try broader search criteria.</p></div>';
-    return;
-  }
-  const hubIds = filteredHubs.map(h => h.id);
-  let itemQuery = sb.from('items').select('*').in('hub_id', hubIds);
-  const { data: allItems } = await itemQuery;
-  let items = allItems || [];
-  const browseUntagged = document.getElementById('browse-untagged')?.checked;
-  if (q) items = items.filter(i => fuzzyMatch(i.name, q) || (i.tags||[]).some(t => fuzzyMatch(t, q)));
-  if (browseUntagged) items = items.filter(i => !i.tags || i.tags.length === 0);
-  items = items.map(i => {
-    const hub = filteredHubs.find(h => h.id === i.hub_id);
-    return { ...i, owner_name: hub?.profiles?.full_name || '', hub_name: hub?.name || '' };
+
+  // Also include restricted hubs where user has approved access
+  const {data:approvedAccess}=await sb.from('hub_access').select('hub_id').eq('requester_id',currentUser?.id).eq('status','approved');
+  const approvedHubIds=(approvedAccess||[]).map(a=>a.hub_id);
+  const {data:restrictedHubs}=approvedHubIds.length>0?await sb.from('hubs').select('*, profiles(full_name,country,state,town)').in('id',approvedHubIds):{data:[]};
+  const allAccessibleHubs=[...hubs,...(restrictedHubs||[]).filter(h=>h.owner_id!==currentUser?.id)];
+
+  if(allAccessibleHubs.length===0){el.innerHTML='<div class="empty"><div class="empty-icon">🔍</div><h3>No hubs found</h3><p>Try different search criteria.</p></div>';return;}
+
+  const hubIds=allAccessibleHubs.map(h=>h.id);
+  const {data:allItems}=await sb.from('items').select('*').in('hub_id',hubIds);
+  let items=(allItems||[]).map(i=>{
+    const hub=allAccessibleHubs.find(h=>h.id===i.hub_id);
+    return{...i,owner_name:hub?.profiles?.full_name||'',hub_name:hub?.name||''};
   });
-  window._browseItems = items;
-  if (items.length === 0) {
-    el.innerHTML = `<div class="empty"><div class="empty-icon">📦</div><h3>No items found</h3><p>Try a different search term.</p></div>`;
-    return;
+  if(q) items=items.filter(i=>fuzzyMatch(i.name,q)||(i.tags||[]).some(t=>fuzzyMatch(t,q)));
+  if(browseUntagged) items=items.filter(i=>!i.tags||i.tags.length===0);
+  allBrowseItems=items;
+
+  if(items.length===0){el.innerHTML='<div class="empty"><div class="empty-icon">📦</div><h3>No items found</h3><p>Try a different search term.</p></div>';return;}
+  el.innerHTML=`<p class="cnt" style="margin-bottom:16px">${items.length} item${items.length===1?'':'s'} found across ${allAccessibleHubs.length} hub${allAccessibleHubs.length===1?'':'s'}</p><div class="grid">${items.map(i=>renderItemCard(i,false)).join('')}</div>`;
+}
+
+// ── REQUESTS TAB ──────────────────────────────────────────────────────────────
+async function renderRequestsTab() {
+  const el=document.getElementById('tab-requests');
+  if(!currentHub){el.innerHTML='<div class="empty"><div class="empty-icon">📭</div><h3>No hub yet</h3><p>Create your hub first.</p></div>';return;}
+  const {data:requests}=await sb.from('hub_access').select('*, profiles(full_name,email,country,town)').eq('hub_id',currentHub.id).order('created_at',{ascending:false});
+  if(!requests||requests.length===0){el.innerHTML='<div class="empty"><div class="empty-icon">📭</div><h3>No access requests</h3><p>When someone requests access to your restricted hub, they will appear here.</p></div>';return;}
+  const pending=requests.filter(r=>r.status==='pending');
+  const approved=requests.filter(r=>r.status==='approved');
+  el.innerHTML=`
+    ${pending.length>0?`<div class="access-panel"><h3>⏳ Pending Requests (${pending.length})</h3>${pending.map(r=>`
+      <div class="access-row">
+        <div class="access-info">${r.profiles?.full_name||'Unknown'}<small>${r.profiles?.email||''} · ${r.profiles?.town||''} ${r.profiles?.country||''}</small></div>
+        <div class="access-actions">
+          <button class="btn btn-p btn-xs" onclick="handleAccessRequest('${r.id}','approved')">✓ Approve</button>
+          <button class="btn btn-g btn-xs" onclick="handleAccessRequest('${r.id}','declined')">✕ Decline</button>
+        </div>
+      </div>`).join('')}</div>`:''}
+    ${approved.length>0?`<div class="access-panel"><h3>✅ Approved Access (${approved.length})</h3>${approved.map(r=>`
+      <div class="access-row">
+        <div class="access-info">${r.profiles?.full_name||'Unknown'}<small>${r.profiles?.email||''} · ${r.profiles?.town||''} ${r.profiles?.country||''}</small></div>
+        <div class="access-actions"><span class="status-badge approved">Approved</span><button class="btn btn-g btn-xs" onclick="handleAccessRequest('${r.id}','revoked')">Revoke</button></div>
+      </div>`).join('')}</div>`:''}`;
+  await checkPendingRequests();
+}
+
+async function handleAccessRequest(requestId, status) {
+  if(status==='revoked'){
+    await sb.from('hub_access').delete().eq('id',requestId);
+  } else {
+    await sb.from('hub_access').update({status}).eq('id',requestId);
   }
-  el.innerHTML = `<p class="cnt" style="margin-bottom:16px">${items.length} item${items.length===1?'':'s'} found across ${filteredHubs.length} hub${filteredHubs.length===1?'':'s'}</p><div class="grid">${items.map(i => renderItemCard(i, false)).join('')}</div>`;
+  await renderRequestsTab();
+  showToast(status==='approved'?'Access approved':status==='declined'?'Request declined':'Access revoked');
 }
 
 // ── PROFILE TAB ───────────────────────────────────────────────────────────────
 function renderProfileTab() {
-  const p = currentProfile || {};
-  document.getElementById('profile-content').innerHTML = `
+  const p=currentProfile||{};
+  document.getElementById('tab-profile').innerHTML=`
     <div class="profile-card">
       <h2>My Profile</h2>
       <div id="profile-alert"></div>
@@ -1197,23 +1036,7 @@ function renderProfileTab() {
         <div class="fg"><label class="fl">Account Type</label><input class="fi" value="${p.account_type==='owner'?'Hub Owner':'Viewer'}" disabled style="opacity:0.6"/></div>
       </div>
       <div class="fg"><label class="fl">Email</label><input class="fi" value="${p.email||''}" disabled style="opacity:0.6"/></div>
-      <div class="fg"><label class="fl">Country</label>
-        <select class="fi" id="p-country">
-          <option value="">Select country…</option>
-          <option ${p.country==='Australia'?'selected':''}>Australia</option>
-          <option ${p.country==='Canada'?'selected':''}>Canada</option>
-          <option ${p.country==='France'?'selected':''}>France</option>
-          <option ${p.country==='Germany'?'selected':''}>Germany</option>
-          <option ${p.country==='Ireland'?'selected':''}>Ireland</option>
-          <option ${p.country==='Italy'?'selected':''}>Italy</option>
-          <option ${p.country==='New Zealand'?'selected':''}>New Zealand</option>
-          <option ${p.country==='South Africa'?'selected':''}>South Africa</option>
-          <option ${p.country==='Spain'?'selected':''}>Spain</option>
-          <option ${p.country==='United Kingdom'?'selected':''}>United Kingdom</option>
-          <option ${p.country==='United States'?'selected':''}>United States</option>
-          <option ${p.country==='Other'?'selected':''}>Other</option>
-        </select>
-      </div>
+      <div class="fg"><label class="fl">Country</label><select class="fi" id="p-country"><option value="">Select country…</option><option ${p.country==='Australia'?'selected':''}>Australia</option><option ${p.country==='Canada'?'selected':''}>Canada</option><option ${p.country==='France'?'selected':''}>France</option><option ${p.country==='Germany'?'selected':''}>Germany</option><option ${p.country==='Ireland'?'selected':''}>Ireland</option><option ${p.country==='Italy'?'selected':''}>Italy</option><option ${p.country==='New Zealand'?'selected':''}>New Zealand</option><option ${p.country==='South Africa'?'selected':''}>South Africa</option><option ${p.country==='Spain'?'selected':''}>Spain</option><option ${p.country==='United Kingdom'?'selected':''}>United Kingdom</option><option ${p.country==='United States'?'selected':''}>United States</option><option ${p.country==='Other'?'selected':''}>Other</option></select></div>
       <div class="form-row">
         <div class="fg"><label class="fl">State / Region</label><input class="fi" id="p-state" value="${p.state||''}"/></div>
         <div class="fg"><label class="fl">Town / City</label><input class="fi" id="p-town" value="${p.town||''}"/></div>
@@ -1226,35 +1049,109 @@ function renderProfileTab() {
     </div>`;
 }
 async function saveProfile() {
-  const name = document.getElementById('p-name').value.trim();
-  const country = document.getElementById('p-country').value;
-  const state = document.getElementById('p-state').value.trim();
-  const town = document.getElementById('p-town').value.trim();
-  const { error } = await sb.from('profiles').update({ full_name: name, country, state, town }).eq('id', currentUser.id);
-  if (error) return showAlert('profile-alert', error.message, 'error');
-  currentProfile = { ...currentProfile, full_name: name, country, state, town };
-  updateHeader();
-  showAlert('profile-alert', 'Profile saved!', 'success');
-  showToast('Profile updated');
+  const name=document.getElementById('p-name').value.trim(), country=document.getElementById('p-country').value;
+  const state=document.getElementById('p-state').value.trim(), town=document.getElementById('p-town').value.trim();
+  const {error}=await sb.from('profiles').update({full_name:name,country,state,town}).eq('id',currentUser.id);
+  if(error) return showAlert('profile-alert',error.message,'error');
+  currentProfile={...currentProfile,full_name:name,country,state,town}; updateHeader();
+  showAlert('profile-alert','Profile saved!','success'); showToast('Profile updated');
 }
 async function sendPasswordReset() {
-  const { error } = await sb.auth.resetPasswordForEmail(currentUser.email, { redirectTo: 'https://mystockhub.netlify.app' });
-  if (error) return showToast(error.message, 'error');
+  const {error}=await sb.auth.resetPasswordForEmail(currentUser.email,{redirectTo:'https://musical-bingo-wrr9.vercel.app'});
+  if(error) return showToast(error.message,'error');
   showToast('Reset email sent — check your inbox');
 }
 
-// ── TOAST ──────────────────────────────────────────────────────────────────────
-function showToast(msg, type) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = type || '';
-  t.style.display = 'block';
-  setTimeout(() => t.style.display = 'none', 2800);
+// ── BULK UPLOAD ───────────────────────────────────────────────────────────────
+let parsedCsvItems=[];
+function openBulkModal() {
+  parsedCsvItems=[]; document.getElementById('bulk-tag').value=''; document.getElementById('bulk-alert').innerHTML='';
+  document.getElementById('csv-preview').style.display='none'; document.getElementById('bulk-save-btn').style.display='none';
+  document.getElementById('csv-input').value=''; document.getElementById('bulk-modal').style.display='flex';
+}
+function downloadTemplate() {
+  const html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"><style>td{mso-number-format:"@";font-family:Calibri,Arial,sans-serif;font-size:11pt;padding:4px 8px}th{background:#c0006a;color:white;font-weight:bold;font-family:Calibri,Arial,sans-serif;font-size:11pt;padding:4px 8px;mso-number-format:"@"}.ex{background:#fdf0f5;color:#5a1858;font-style:italic}col.wide{mso-width-source:userset;mso-width-alt:6400;width:220pt}col.med{mso-width-source:userset;mso-width-alt:3200;width:120pt}</style></head><body><table border="1" style="border-collapse:collapse"><colgroup><col class="wide"/><col class="med"/><col class="med"/><col class="med"/><col class="med"/><col class="med"/><col class="med"/><col class="med"/><col class="med"/></colgroup><tr><th>Product Name</th><th>Product Code</th><th>Category</th><th>Sub-group</th><th>Tag 1</th><th>Tag 2</th><th>Tag 3</th><th>Tag 4</th><th>Tag 5</th></tr><tr class="ex"><td>Example Product Name</td><td>EX-001</td><td>Stamps</td><td>Floral</td><td>autumn</td><td>paper</td><td>red</td><td></td><td></td></tr><tr class="ex"><td>Another Example Product</td><td>EX-002</td><td>Papers</td><td></td><td>autumn</td><td></td><td></td><td></td><td></td></tr>${Array(18).fill('<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>').join('')}</table></body></html>`;
+  const blob=new Blob([html],{type:'application/vnd.ms-excel;charset=utf-8'});
+  const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='mystockhub-template.xls'; a.click(); URL.revokeObjectURL(url);
+  showToast('Template downloaded');
+}
+function handleCsvDrop(e) { e.preventDefault(); document.getElementById('csv-zone').classList.remove('drag'); handleCsvFile(e.dataTransfer.files[0]); }
+function handleCsvFile(file) {
+  if(!file||!file.name.endsWith('.csv')) return showAlert('bulk-alert','Please upload a .csv file.','error');
+  const reader=new FileReader(); reader.onload=e=>parseCsv(e.target.result); reader.readAsText(file);
+}
+function parseCsvLine(line) {
+  const result=[]; let current='',inQuotes=false;
+  for(let i=0;i<line.length;i++){if(line[i]==='"'){inQuotes=!inQuotes;continue;}if(line[i]===','&&!inQuotes){result.push(current.trim());current='';continue;}current+=line[i];}
+  result.push(current.trim()); return result;
+}
+function parseCsv(text) {
+  const lines=text.trim().split('\n').filter(l=>l.trim());
+  if(lines.length<2) return showAlert('bulk-alert','CSV must have a header row and at least one product.','error');
+  const header=lines[0].toLowerCase().split(',').map(h=>h.trim().replace(/"/g,''));
+  const nameIdx=header.findIndex(h=>h.includes('name'));
+  const codeIdx=header.findIndex(h=>h.includes('code'));
+  const catIdx=header.findIndex(h=>h.includes('category'));
+  const subIdx=header.findIndex(h=>h.includes('sub'));
+  const tagIdxs=header.reduce((acc,h,i)=>{if(h.includes('tag'))acc.push(i);return acc;},[]);
+  if(nameIdx===-1) return showAlert('bulk-alert','CSV must have a "Product Name" column.','error');
+  parsedCsvItems=[]; const tbody=document.getElementById('csv-table-body'); tbody.innerHTML='';
+  for(let i=1;i<lines.length;i++){
+    const cols=parseCsvLine(lines[i]);
+    const name=cols[nameIdx]||''; const code=codeIdx!==-1?(cols[codeIdx]||''):'';
+    const category=catIdx!==-1?(cols[catIdx]||'').trim():'';
+    const subgroup=subIdx!==-1?(cols[subIdx]||'').trim():'';
+    const itemTags=tagIdxs.map(ti=>(cols[ti]||'').trim().toLowerCase().replace(/\s+/g,'-')).filter(Boolean);
+    if(!name) continue;
+    parsedCsvItems.push({name,product_code:code,category,subgroup,tags:itemTags});
+    tbody.innerHTML+=`<tr style="border-top:1px solid var(--pinkmid)"><td style="padding:6px 10px;font-weight:600;color:var(--navy)">${name}</td><td style="padding:6px 10px;color:var(--dimp)">${code||'—'}</td><td style="padding:6px 10px;color:var(--dimp)">${category||'—'}</td><td style="padding:6px 10px;color:var(--dimp)">${subgroup||'—'}</td><td style="padding:6px 10px;color:var(--dimp);font-size:11px">${itemTags.join(', ')||'—'}</td><td style="padding:6px 10px"><span style="color:var(--success);font-weight:700;font-size:11px">✓</span></td></tr>`;
+  }
+  document.getElementById('csv-count').textContent=`${parsedCsvItems.length} item${parsedCsvItems.length===1?'':'s'} ready`;
+  document.getElementById('csv-preview').style.display='block';
+  document.getElementById('bulk-save-btn').style.display=parsedCsvItems.length>0?'block':'none';
+  document.getElementById('bulk-alert').innerHTML='';
+}
+async function saveBulkItems() {
+  if(!parsedCsvItems.length)return;
+  const sharedTag=document.getElementById('bulk-tag').value.trim().toLowerCase().replace(/\s+/g,'-');
+  const btn=document.getElementById('bulk-save-btn'); btn.textContent='Uploading…'; btn.disabled=true;
+
+  // Resolve or create categories and subgroups
+  const catCache={}, subCache={};
+  for(const item of parsedCsvItems){
+    if(item.category){
+      if(!catCache[item.category]){
+        let cat=currentCategories.find(c=>c.name.toLowerCase()===item.category.toLowerCase());
+        if(!cat){const {data}=await sb.from('categories').insert({hub_id:currentHub.id,name:item.category}).select().single();cat=data;}
+        catCache[item.category]=cat?.id;
+      }
+      item.category_id=catCache[item.category]||null;
+      if(item.subgroup&&item.category_id){
+        const key=item.category+'__'+item.subgroup;
+        if(!subCache[key]){
+          let sub=currentSubgroups.find(s=>s.name.toLowerCase()===item.subgroup.toLowerCase()&&s.category_id===item.category_id);
+          if(!sub){const {data}=await sb.from('subgroups').insert({hub_id:currentHub.id,category_id:item.category_id,name:item.subgroup}).select().single();sub=data;}
+          subCache[key]=sub?.id;
+        }
+        item.subgroup_id=subCache[key]||null;
+      }
+    }
+  }
+
+  const itemsToInsert=parsedCsvItems.map(item=>{
+    const allTags=[...(item.tags||[])];
+    if(sharedTag&&!allTags.includes(sharedTag))allTags.unshift(sharedTag);
+    return{hub_id:currentHub.id,name:item.name,product_code:item.product_code||null,tags:allTags,image_url:null,category_id:item.category_id||null,subgroup_id:item.subgroup_id||null};
+  });
+  const {error}=await sb.from('items').insert(itemsToInsert);
+  if(error){btn.textContent='Upload All Items';btn.disabled=false;return showAlert('bulk-alert',error.message,'error');}
+  closeModal('bulk-modal'); await renderHubTab(); showToast(`${parsedCsvItems.length} items uploaded successfully`);
+  btn.textContent='Upload All Items'; btn.disabled=false;
 }
 
-// ── KEYBOARD ──────────────────────────────────────────────────────────────────
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeLightbox(); closeItemModal(); closeHubModal(); } });
-
+// ── TOAST ──────────────────────────────────────────────────────────────────────
+function showToast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className=type||'';t.style.display='block';setTimeout(()=>t.style.display='none',2800);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLightbox();['item-modal','hub-modal','cat-modal','bulk-modal'].forEach(id=>closeModal(id));}});
 init();
 </script>
 </body>
