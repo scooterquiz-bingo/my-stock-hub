@@ -753,7 +753,15 @@ function highlightMatch(text, query) {
 
 function hubSearchLive(val) {
   searchQuery = val;
+  const input = document.getElementById('hub-search-input');
+  const cursor = input ? input.selectionStart : null;
   renderHubContent();
+  // Restore focus and cursor position after render
+  const restored = document.getElementById('hub-search-input');
+  if (restored && cursor !== null) {
+    restored.focus();
+    restored.setSelectionRange(cursor, cursor);
+  }
 }
 
 function toggleUntagged() {
@@ -762,7 +770,7 @@ function toggleUntagged() {
   searchQuery = '';
   const input = document.getElementById('hub-search-input');
   if (input) input.value = '';
-  renderHubContent();
+  updateHubDynamic();
 }
 function clearAllFilters() {
   searchQuery = '';
@@ -783,7 +791,7 @@ function debouncedBrowseSearch() {
 }
 function toggleFilterTag(tag) {
   activeFilterTags = activeFilterTags.includes(tag) ? activeFilterTags.filter(t=>t!==tag) : [...activeFilterTags, tag];
-  renderHubContent();
+  updateHubDynamic();
 }
 
 async function createHub() {
