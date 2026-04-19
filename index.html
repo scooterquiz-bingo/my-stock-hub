@@ -10,7 +10,7 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
       --navy:#0a1540;--navy2:#162060;
-      --pinkbg:#f0b8d5;--pinkmid:#de90ba;--pinkdark:#b85090;
+      --pinkbg:#f5cfe2;--pinkmid:#e8aacb;--pinkdark:#c070a0;
       --mag:#c0006a;--mag2:#980055;--maglt:#e8007e;
       --white:#fff;--topp:#08102e;--dimp:#5a1858;
       --danger:#c00030;--success:#007a40;
@@ -65,14 +65,14 @@
 
     /* APP HEADER */
     #app-screen{min-height:100vh;display:flex;flex-direction:column}
-    .hdr{background:var(--navy);border-bottom:3px solid var(--mag);padding:0 28px;display:flex;align-items:center;justify-content:space-between;min-height:66px;position:sticky;top:0;z-index:100}
+    .hdr{background:var(--navy);border-bottom:3px solid var(--mag);padding:0 48px;display:flex;align-items:center;justify-content:space-between;min-height:120px;position:sticky;top:0;z-index:100}
     .brand{display:flex;align-items:center;gap:12px}
-    .brand-icon{color:#ff70b0;font-size:22px}
-    .brand h1{font-size:20px;color:#fff;letter-spacing:0.05em}
-    .brand-sub{display:block;font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#99aadd;margin-top:2px}
+    .brand-icon{color:#ff70b0;font-size:32px}
+    .brand h1{font-size:28px;color:#fff;letter-spacing:0.06em}
+    .brand-sub{display:block;font-size:11px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#99aadd;margin-top:4px}
     .hdr-right{display:flex;align-items:center;gap:14px}
-    .user-name{font-size:13px;font-weight:700;color:#fff}
-    .user-type{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#99aadd}
+    .user-name{font-size:16px;font-weight:700;color:#fff}
+    .user-type{font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#99aadd;margin-top:2px}
     .hdr-btn{background:rgba(255,255,255,0.12);border:2px solid rgba(255,255,255,0.3);border-radius:20px;color:#fff;font-size:11px;font-weight:700;padding:6px 14px;cursor:pointer;transition:all var(--t);font-family:'Inter',sans-serif;letter-spacing:0.06em;text-transform:uppercase}
     .hdr-btn:hover{background:rgba(255,255,255,0.22);border-color:rgba(255,255,255,0.6)}
     .hdr-btn.active{background:var(--mag);border-color:var(--maglt)}
@@ -319,9 +319,6 @@
         <div class="user-name" id="hdr-name">—</div>
         <div class="user-type" id="hdr-type">—</div>
       </div>
-      <button class="hdr-btn" id="tab-hub-btn" onclick="switchTab('hub')">My Hub</button>
-      <button class="hdr-btn" onclick="switchTab('browse')">Browse</button>
-      <button class="hdr-btn" onclick="switchTab('profile')">Profile</button>
       <button class="hdr-btn" onclick="handleLogout()">Sign Out</button>
     </div>
   </header>
