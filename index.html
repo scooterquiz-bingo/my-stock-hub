@@ -113,10 +113,28 @@
     .srch input{background:none;border:none;outline:none;color:var(--topp);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;width:100%}
     .srch input::placeholder{color:var(--pinkdark);font-weight:500}
     .srch-icon{color:var(--mag);font-size:16px;flex-shrink:0}
-    .tagbar{display:flex;flex-wrap:wrap;gap:6px;flex:2}
-    .ftag{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;transition:all var(--t);border:2px solid var(--mag2);color:var(--mag2);background:rgba(255,255,255,0.65);font-family:'Inter',sans-serif}
-    .ftag:hover{background:var(--mag2);color:#fff}
-    .ftag.on{background:var(--mag);border-color:var(--mag);color:#fff}
+    .tag-dropdown-wrap{position:relative;display:flex;align-items:center;gap:8px;flex-shrink:0}
+    .tag-dropdown-btn{display:flex;align-items:center;gap:8px;padding:9px 16px;background:#fff;border:2px solid var(--pinkdark);border-radius:var(--r);font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:var(--topp);cursor:pointer;transition:all var(--t);white-space:nowrap;min-width:180px;justify-content:space-between}
+    .tag-dropdown-btn:hover,.tag-dropdown-btn.open{border-color:var(--mag);color:var(--mag)}
+    .tag-dropdown-btn.has-active{background:rgba(192,0,106,0.08);border-color:var(--mag);color:var(--mag)}
+    .tag-dropdown-arrow{font-size:10px;transition:transform var(--t)}
+    .tag-dropdown-btn.open .tag-dropdown-arrow{transform:rotate(180deg)}
+    .tag-dropdown-menu{position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:2px solid var(--pinkdark);border-radius:var(--r);box-shadow:0 8px 28px rgba(10,21,64,0.18);z-index:50;min-width:220px;max-height:320px;overflow-y:auto;display:none}
+    .tag-dropdown-menu.open{display:block}
+    .tag-dropdown-search{padding:10px 12px;border-bottom:1px solid var(--pinkbg);position:sticky;top:0;background:#fff}
+    .tag-dropdown-search input{width:100%;border:1.5px solid var(--pinkdark);border-radius:4px;padding:6px 10px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--topp);outline:none;background:var(--pinkbg)}
+    .tag-dropdown-search input:focus{border-color:var(--mag);background:#fff}
+    .tag-dropdown-item{display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;font-size:12px;font-weight:600;color:var(--topp);transition:background var(--t);border-bottom:1px solid var(--pinkbg)}
+    .tag-dropdown-item:last-child{border-bottom:none}
+    .tag-dropdown-item:hover{background:var(--pinkbg)}
+    .tag-dropdown-item.checked{color:var(--mag)}
+    .tag-dropdown-item .tag-check{width:16px;height:16px;border:2px solid var(--pinkdark);border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;transition:all var(--t)}
+    .tag-dropdown-item.checked .tag-check{background:var(--mag);border-color:var(--mag);color:#fff}
+    .tag-dropdown-notags{display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;font-size:12px;font-weight:700;color:var(--topp);transition:background var(--t);border-top:2px solid var(--pinkbg);margin-top:2px}
+    .tag-dropdown-notags:hover{background:var(--pinkbg)}
+    .tag-dropdown-notags.checked{color:var(--navy)}
+    .tag-dropdown-notags .tag-check{width:16px;height:16px;border:2px solid var(--pinkdark);border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;transition:all var(--t)}
+    .tag-dropdown-notags.checked .tag-check{background:var(--navy);border-color:var(--navy);color:#fff}
     .cnt{font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap}
     .add-btn{display:flex;align-items:center;gap:6px;padding:9px 18px;border-radius:var(--r);background:var(--mag);color:#fff;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all var(--t);white-space:nowrap}
     .add-btn:hover{background:var(--maglt)}
@@ -673,7 +691,7 @@ function renderHubLayout() {
       <div>
         <div class="toolbar">
           <div class="srch"><span class="srch-icon">🔍</span><input id="hub-search-input" placeholder="Search items or tags…" autocomplete="off"/></div>
-          <div class="tagbar" id="hub-tagbar"></div>
+          <div class="tag-dropdown-wrap" id="hub-tag-wrap"><button class="tag-dropdown-btn" id="hub-tag-btn" onclick="toggleHubTagDropdown()"><span id="hub-tag-label">Filter by tag</span><span class="tag-dropdown-arrow">▼</span></button><div class="tag-dropdown-menu" id="hub-tag-menu"><div class="tag-dropdown-search"><input type="text" placeholder="Search tags…" id="hub-tag-search" oninput="filterHubTagList(this.value)"/></div><div id="hub-tag-list"></div><div class="tag-dropdown-notags" id="hub-notags-item" onclick="toggleUntagged()"><span class="tag-check" id="hub-notags-check"></span>⚠ No tags only</div></div></div>
           <span class="cnt" id="hub-cnt"></span>
           <button class="add-btn" onclick="openItemModal()">＋ Add Item</button>
           <button class="add-btn navy" onclick="openBulkModal()">⬆ Bulk Upload</button>
@@ -695,13 +713,57 @@ function filterBySubgroup(catId, subId) {
   renderHubLayout();
 }
 
+
+function toggleHubTagDropdown() {
+  const btn = document.getElementById('hub-tag-btn');
+  const menu = document.getElementById('hub-tag-menu');
+  if (!btn || !menu) return;
+  const isOpen = menu.classList.contains('open');
+  // Close all dropdowns first
+  document.querySelectorAll('.tag-dropdown-menu').forEach(m => m.classList.remove('open'));
+  document.querySelectorAll('.tag-dropdown-btn').forEach(b => b.classList.remove('open'));
+  if (!isOpen) { menu.classList.add('open'); btn.classList.add('open'); document.getElementById('hub-tag-search')?.focus(); }
+}
+function filterHubTagList(q) {
+  const allTags = [...new Set(currentItems.flatMap(i => i.tags||[]))].sort();
+  const filtered = q ? allTags.filter(t => t.toLowerCase().includes(q.toLowerCase())) : allTags;
+  const tagList = document.getElementById('hub-tag-list');
+  if (tagList) tagList.innerHTML = filtered.map(t => `
+    <div class="tag-dropdown-item ${activeFilterTags.includes(t)?'checked':''}" onclick="toggleFilterTag('${t}')">
+      <span class="tag-check">${activeFilterTags.includes(t)?'✓':''}</span>${t}
+    </div>`).join('');
+}
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.tag-dropdown-wrap')) {
+    document.querySelectorAll('.tag-dropdown-menu').forEach(m => m.classList.remove('open'));
+    document.querySelectorAll('.tag-dropdown-btn').forEach(b => b.classList.remove('open'));
+  }
+});
 function updateHubDynamic() {
   const allTags = [...new Set(currentItems.flatMap(i => i.tags||[]))].sort();
   const filtered = filterItems(currentItems);
-  const tagbar = document.getElementById('hub-tagbar');
-  if (tagbar) tagbar.innerHTML = allTags.map(t=>`<button class="ftag ${activeFilterTags.includes(t)?'on':''}" onclick="toggleFilterTag('${t}')">${t}</button>`).join('') +
-    `<button class="ftag ${showUntagged?'on':''}" onclick="toggleUntagged()" style="background:${showUntagged?'var(--navy)':'rgba(255,255,255,0.65)'};border-color:${showUntagged?'var(--navy)':'var(--mag2)'};color:${showUntagged?'#fff':'var(--mag2)'}">⚠ No tags</button>` +
-    ((activeFilterTags.length>0||searchQuery||showUntagged)?'<button class="clear-btn" onclick="clearAllFilters()">✕ Clear</button>':'');
+  // Update tag dropdown
+  const tagList = document.getElementById('hub-tag-list');
+  if (tagList) {
+    tagList.innerHTML = allTags.map(t => `
+      <div class="tag-dropdown-item ${activeFilterTags.includes(t)?'checked':''}" onclick="toggleFilterTag('${t}')">
+        <span class="tag-check">${activeFilterTags.includes(t)?'✓':''}</span>${t}
+      </div>`).join('');
+  }
+  // Update no tags check
+  const noTagsItem = document.getElementById('hub-notags-item');
+  const noTagsCheck = document.getElementById('hub-notags-check');
+  if (noTagsItem) noTagsItem.classList.toggle('checked', showUntagged);
+  if (noTagsCheck) noTagsCheck.textContent = showUntagged ? '✓' : '';
+  // Update button label
+  const btn = document.getElementById('hub-tag-btn');
+  const label = document.getElementById('hub-tag-label');
+  if (label) {
+    const total = activeFilterTags.length + (showUntagged ? 1 : 0);
+    label.textContent = total > 0 ? `${total} tag filter${total>1?'s':''} active` : 'Filter by tag';
+    if (btn) btn.classList.toggle('has-active', total > 0);
+  }
   const cnt = document.getElementById('hub-cnt');
   if (cnt) cnt.textContent = filtered.length+' / '+currentItems.length+' items';
   const grid = document.getElementById('items-grid');
@@ -936,9 +998,10 @@ async function renderBrowseTab() {
       <div class="fg"><label class="fl">Country</label><select class="fi" id="browse-country"><option value="">All countries</option><option>Australia</option><option>Canada</option><option>France</option><option>Germany</option><option>Ireland</option><option>Italy</option><option>New Zealand</option><option>South Africa</option><option>Spain</option><option>United Kingdom</option><option>United States</option><option>Other</option></select></div>
       <div class="fg"><label class="fl">State / Region</label><input class="fi" id="browse-state" placeholder="Any"/></div>
       <div class="fg"><label class="fl">Town / City</label><input class="fi" id="browse-town" placeholder="Any"/></div>
-      <div class="fg" style="justify-content:flex-end;margin-bottom:0"><label style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--navy);cursor:pointer;white-space:nowrap"><input type="checkbox" id="browse-untagged" style="width:16px;height:16px;accent-color:var(--mag)"/> Show untagged only</label></div>
+      
       <button class="btn btn-p btn-sm" style="width:auto;margin-top:0" onclick="searchHubs()">Search</button>
     </div>
+    <div id="browse-tag-wrap" style="display:none"><div class="tag-dropdown-wrap" style="margin-bottom:16px"><button class="tag-dropdown-btn" id="browse-tag-btn" onclick="toggleBrowseTagDropdown()"><span id="browse-tag-label">Filter by tag</span><span class="tag-dropdown-arrow">▼</span></button><div class="tag-dropdown-menu" id="browse-tag-menu"><div class="tag-dropdown-search"><input type="text" placeholder="Search tags…" id="browse-tag-search" oninput="filterBrowseTagList(this.value)"/></div><div id="browse-tag-list"></div><div class="tag-dropdown-notags" id="browse-notags-item" onclick="toggleBrowseUntagged()"><span class="tag-check" id="browse-notags-check"></span>⚠ No tags only</div></div></div></div>
     <div id="browse-results"><div class="empty"><div class="empty-icon">🔍</div><h3>Search to discover items</h3><p>Enter a keyword, tag or location above and hit Search to browse across all hubs.</p></div></div>`;
   const browseInput=document.getElementById('browse-search');
   if(browseInput) browseInput.addEventListener('keydown',e=>{if(e.key==='Enter')searchHubs();});
@@ -984,9 +1047,14 @@ async function searchHubs() {
   if(q) items=items.filter(i=>fuzzyMatch(i.name,q)||(i.tags||[]).some(t=>fuzzyMatch(t,q)));
   if(browseUntagged) items=items.filter(i=>!i.tags||i.tags.length===0);
   allBrowseItems=items;
-
-  if(items.length===0){el.innerHTML='<div class="empty"><div class="empty-icon">📦</div><h3>No items found</h3><p>Try a different search term.</p></div>';return;}
-  el.innerHTML=`<p class="cnt" style="margin-bottom:16px">${items.length} item${items.length===1?'':'s'} found across ${allAccessibleHubs.length} hub${allAccessibleHubs.length===1?'':'s'}</p><div class="grid">${items.map(i=>renderItemCard(i,false)).join('')}</div>`;
+  // Build browse tag dropdown
+  const allBrowseTags = [...new Set(items.flatMap(i => i.tags||[]))].sort();
+  window._activeBrowseTags = window._activeBrowseTags || [];
+  window._browseShowUntagged = false;
+  const browseTagWrap = document.getElementById('browse-tag-wrap');
+  if (browseTagWrap) browseTagWrap.style.display = allBrowseTags.length > 0 ? 'block' : 'none';
+  renderBrowseTagList(allBrowseTags);
+  renderBrowseResults(items, allAccessibleHubs.length);
 }
 
 // ── REQUESTS TAB ──────────────────────────────────────────────────────────────
@@ -1149,6 +1217,77 @@ async function saveBulkItems() {
   btn.textContent='Upload All Items'; btn.disabled=false;
 }
 
+
+// ── BROWSE TAG DROPDOWN ───────────────────────────────────────────────────────
+function renderBrowseTagList(tags) {
+  const list = document.getElementById('browse-tag-list');
+  if (!list) return;
+  const activeTags = window._activeBrowseTags || [];
+  list.innerHTML = (tags||[]).map(t => `
+    <div class="tag-dropdown-item ${activeTags.includes(t)?'checked':''}" onclick="toggleBrowseTag('${t}')">
+      <span class="tag-check">${activeTags.includes(t)?'✓':''}</span>${t}
+    </div>`).join('');
+  const noTagsItem = document.getElementById('browse-notags-item');
+  const noTagsCheck = document.getElementById('browse-notags-check');
+  if (noTagsItem) noTagsItem.classList.toggle('checked', window._browseShowUntagged);
+  if (noTagsCheck) noTagsCheck.textContent = window._browseShowUntagged ? '✓' : '';
+  const btn = document.getElementById('browse-tag-btn');
+  const label = document.getElementById('browse-tag-label');
+  if (label) {
+    const total = activeTags.length + (window._browseShowUntagged ? 1 : 0);
+    label.textContent = total > 0 ? `${total} tag filter${total>1?'s':''} active` : 'Filter by tag';
+    if (btn) btn.classList.toggle('has-active', total > 0);
+  }
+}
+function toggleBrowseTagDropdown() {
+  const btn = document.getElementById('browse-tag-btn');
+  const menu = document.getElementById('browse-tag-menu');
+  if (!btn || !menu) return;
+  const isOpen = menu.classList.contains('open');
+  document.querySelectorAll('.tag-dropdown-menu').forEach(m => m.classList.remove('open'));
+  document.querySelectorAll('.tag-dropdown-btn').forEach(b => b.classList.remove('open'));
+  if (!isOpen) { menu.classList.add('open'); btn.classList.add('open'); document.getElementById('browse-tag-search')?.focus(); }
+}
+function filterBrowseTagList(q) {
+  const allTags = [...new Set(allBrowseItems.flatMap(i => i.tags||[]))].sort();
+  const filtered = q ? allTags.filter(t => t.toLowerCase().includes(q.toLowerCase())) : allTags;
+  renderBrowseTagList(filtered);
+}
+function toggleBrowseTag(tag) {
+  window._activeBrowseTags = window._activeBrowseTags || [];
+  window._activeBrowseTags = window._activeBrowseTags.includes(tag)
+    ? window._activeBrowseTags.filter(t => t !== tag)
+    : [...window._activeBrowseTags, tag];
+  applyBrowseFilters();
+}
+function toggleBrowseUntagged() {
+  window._browseShowUntagged = !window._browseShowUntagged;
+  applyBrowseFilters();
+}
+function applyBrowseFilters() {
+  const activeTags = window._activeBrowseTags || [];
+  const showUntagged = window._browseShowUntagged;
+  let filtered = allBrowseItems.filter(i => {
+    const matchTags = activeTags.length === 0 || activeTags.every(t => (i.tags||[]).includes(t));
+    const matchUntagged = !showUntagged || !i.tags || i.tags.length === 0;
+    return matchTags && matchUntagged;
+  });
+  const allBrowseTags = [...new Set(allBrowseItems.flatMap(i => i.tags||[]))].sort();
+  renderBrowseTagList(allBrowseTags);
+  renderBrowseResults(filtered, null);
+}
+function renderBrowseResults(items, hubCount) {
+  const el = document.getElementById('browse-results');
+  if (!el) return;
+  if (items.length === 0) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">📦</div><h3>No items match</h3><p>Try adjusting your tag filters.</p></div>';
+    return;
+  }
+  const countText = hubCount !== null
+    ? `${items.length} item${items.length===1?'':'s'} found across ${hubCount} hub${hubCount===1?'':'s'}`
+    : `${items.length} item${items.length===1?'':'s'} match your filters`;
+  el.innerHTML = `<p class="cnt" style="margin-bottom:16px">${countText}</p><div class="grid">${items.map(i=>renderItemCard(i,false)).join('')}</div>`;
+}
 // ── TOAST ──────────────────────────────────────────────────────────────────────
 function showToast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className=type||'';t.style.display='block';setTimeout(()=>t.style.display='none',2800);}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLightbox();['item-modal','hub-modal','cat-modal','bulk-modal'].forEach(id=>closeModal(id));}});
