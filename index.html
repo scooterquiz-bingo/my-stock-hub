@@ -1026,7 +1026,7 @@ function toggleLoanStatus() {
   if (!isOn) { const inp = document.getElementById('loan-to-input'); if(inp) inp.value = ''; }
 }
 
-async async function openItemModal(itemId) {
+async function openItemModal(itemId) {
   // Check item cap for new items
   if (!itemId) {
     const cap = getItemCap();
