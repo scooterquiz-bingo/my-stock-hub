@@ -371,7 +371,7 @@
           <div class="tags-list" id="tags-list"></div>
         </div>
       </div>
-      ${isStandardOrAbove() ? `<div class="fg">
+      <div class="fg" id="loan-section-full">
         <label class="fl">Loan Status</label>
         <div class="loan-toggle-row">
           <span class="loan-toggle-label" id="loan-status-label">In Stock</span>
@@ -381,7 +381,10 @@
         <div class="loan-to-field" id="loan-to-field" style="display:none">
           <input class="fi" id="loan-to-input" placeholder="Who is this item on loan to?"/>
         </div>
-      </div>` : `<div class="fg"><div class="info-box" onclick="showUpgradePrompt('on_loan')" style="cursor:pointer">🔒 <strong>On Loan tracking</strong> — available on Standard and Elite plans</div></div>`}
+      </div>
+      <div class="fg" id="loan-section-locked" style="display:none">
+        <div class="info-box" onclick="showUpgradePrompt('on_loan')" style="cursor:pointer">🔒 <strong>On Loan tracking</strong> — available on Standard and Elite plans</div>
+      </div>
       <div class="modal-foot"><button class="btn btn-g btn-sm" onclick="closeModal('item-modal')">Cancel</button><button class="btn btn-p btn-sm" onclick="saveItem()">Save Item</button></div>
     </div>
   </div>
@@ -397,7 +400,7 @@
       <div class="fg"><label class="fl">Hub Access</label>
         <div style="display:flex;gap:10px;margin-top:4px">
           <div class="type-card" id="access-open" onclick="selectAccess('open')" style="flex:1;padding:12px;text-align:center;cursor:pointer"><div style="font-size:20px;margin-bottom:4px">🌐</div><h4 style="font-size:12px">Open</h4><p style="font-size:11px">Anyone can browse</p></div>
-          <div class="type-card" id="access-restricted" onclick="isStandardOrAbove()?selectAccess('restricted'):showUpgradePrompt('access_control')" style="flex:1;padding:12px;text-align:center;cursor:pointer">${isStandardOrAbove()?'':'<span style="font-size:10px;font-weight:700;color:var(--mag)">🔒 Upgrade</span>'}<div style="font-size:20px;margin-bottom:4px">🔒</div><h4 style="font-size:12px">Restricted</h4><p style="font-size:11px">Request & approve</p></div>
+          <div class="type-card" id="access-restricted" onclick="isStandardOrAbove()?selectAccess('restricted'):showUpgradePrompt('access_control')" style="flex:1;padding:12px;text-align:center;cursor:pointer"><div id="restricted-upgrade-tag" style="display:none;font-size:10px;font-weight:700;color:var(--mag);margin-bottom:4px">🔒 Upgrade required</div><div style="font-size:20px;margin-bottom:4px">🔒</div><h4 style="font-size:12px">Restricted</h4><p style="font-size:11px">Request & approve</p></div>
         </div>
       </div>
       <div id="private-link-section" style="display:none">
@@ -948,6 +951,9 @@ async function toggleDiscoverable() {
 
 // ── HUB SETTINGS ──────────────────────────────────────────────────────────────
 function openHubModal() {
+  // Show upgrade tag on restricted if free plan
+  const upgradeTag = document.getElementById('restricted-upgrade-tag');
+  if (upgradeTag) upgradeTag.style.display = isStandardOrAbove() ? 'none' : 'block';
   document.getElementById('hub-name-input').value=currentHub.name||'';
   document.getElementById('hub-label-input').value=currentHub.label||'';
   selectedAccess=currentHub.access_type||'open';
@@ -1045,6 +1051,11 @@ async function openItemModal(itemId) {
   document.getElementById('item-form-alert').innerHTML='';
   document.getElementById('upload-area').style.display='block';
   document.getElementById('preview-area').style.display='none';
+  // Show/hide loan section based on plan
+  const loanFull = document.getElementById('loan-section-full');
+  const loanLocked = document.getElementById('loan-section-locked');
+  if (loanFull) loanFull.style.display = isStandardOrAbove() ? 'block' : 'none';
+  if (loanLocked) loanLocked.style.display = isStandardOrAbove() ? 'none' : 'block';
   // Reset loan status
   const loanToggle = document.getElementById('loan-toggle');
   const loanToField = document.getElementById('loan-to-field');
