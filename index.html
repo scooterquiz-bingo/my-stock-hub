@@ -233,6 +233,25 @@
     .info-box strong{color:var(--navy)}
     .link-box{background:var(--pinkbg);border:2px solid var(--pinkdark);border-radius:8px;padding:12px 16px;font-size:12px;font-family:monospace;font-weight:600;color:var(--navy);word-break:break-all}
     .section-title{font-size:18px;color:var(--navy);margin-bottom:16px}
+    .loan-toggle-row{display:flex;align-items:center;gap:12px;padding:10px 0;flex-wrap:wrap}
+    .loan-toggle-label{font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap}
+    .toggle-track{width:48px;height:26px;border-radius:13px;background:var(--pinkmid);border:none;cursor:pointer;position:relative;transition:background var(--t);flex-shrink:0;padding:0}
+    .toggle-track.on{background:var(--mag)}
+    .toggle-thumb{position:absolute;top:3px;left:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:left var(--t);box-shadow:0 1px 4px rgba(0,0,0,0.2)}
+    .toggle-track.on .toggle-thumb{left:25px}
+    .loan-badge{padding:3px 10px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:0.06em;background:#fff3e0;color:#b06000;border:1.5px solid #f0a020;white-space:nowrap}
+    .loan-to-field{margin-top:4px}
+    .plan-badge{padding:3px 10px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase}
+    .plan-badge.free{background:#f0f0f0;color:#666;border:1.5px solid #ccc}
+    .plan-badge.standard{background:rgba(0,122,64,0.1);color:var(--success);border:1.5px solid var(--success)}
+    .plan-badge.elite{background:rgba(184,134,11,0.12);color:#8a6000;border:1.5px solid #c9a020}
+    .upgrade-banner{background:#fff8e1;border:2px solid #f0c030;border-radius:10px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .upgrade-banner p{font-size:13px;font-weight:600;color:var(--navy);line-height:1.5}
+    .upgrade-banner strong{color:var(--mag)}
+    .upgrade-btn{background:var(--mag);color:#fff;border:none;border-radius:var(--r);padding:8px 18px;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background var(--t)}
+    .upgrade-btn:hover{background:var(--maglt)}
+    .feature-locked{opacity:0.45;pointer-events:none;position:relative}
+    .lock-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.7);border-radius:inherit;font-size:18px;cursor:pointer;pointer-events:all}
     @media(max-width:768px){.hub-layout{grid-template-columns:1fr}.cat-sidebar{display:none}.form-row{grid-template-columns:1fr}.main{padding:16px}.hdr{padding:0 20px;min-height:80px}.brand h1{font-size:20px}}
   </style>
 </head>
@@ -352,6 +371,17 @@
           <div class="tags-list" id="tags-list"></div>
         </div>
       </div>
+      ${isStandardOrAbove() ? `<div class="fg">
+        <label class="fl">Loan Status</label>
+        <div class="loan-toggle-row">
+          <span class="loan-toggle-label" id="loan-status-label">In Stock</span>
+          <button class="toggle-track" id="loan-toggle" onclick="toggleLoanStatus()"><span class="toggle-thumb"></span></button>
+          <span class="loan-toggle-label" style="color:var(--dimp)">On Loan</span>
+        </div>
+        <div class="loan-to-field" id="loan-to-field" style="display:none">
+          <input class="fi" id="loan-to-input" placeholder="Who is this item on loan to?"/>
+        </div>
+      </div>` : `<div class="fg"><div class="info-box" onclick="showUpgradePrompt('on_loan')" style="cursor:pointer">🔒 <strong>On Loan tracking</strong> — available on Standard and Elite plans</div></div>`}
       <div class="modal-foot"><button class="btn btn-g btn-sm" onclick="closeModal('item-modal')">Cancel</button><button class="btn btn-p btn-sm" onclick="saveItem()">Save Item</button></div>
     </div>
   </div>
@@ -367,7 +397,7 @@
       <div class="fg"><label class="fl">Hub Access</label>
         <div style="display:flex;gap:10px;margin-top:4px">
           <div class="type-card" id="access-open" onclick="selectAccess('open')" style="flex:1;padding:12px;text-align:center;cursor:pointer"><div style="font-size:20px;margin-bottom:4px">🌐</div><h4 style="font-size:12px">Open</h4><p style="font-size:11px">Anyone can browse</p></div>
-          <div class="type-card" id="access-restricted" onclick="selectAccess('restricted')" style="flex:1;padding:12px;text-align:center;cursor:pointer"><div style="font-size:20px;margin-bottom:4px">🔒</div><h4 style="font-size:12px">Restricted</h4><p style="font-size:11px">Request & approve</p></div>
+          <div class="type-card" id="access-restricted" onclick="isStandardOrAbove()?selectAccess('restricted'):showUpgradePrompt('access_control')" style="flex:1;padding:12px;text-align:center;cursor:pointer">${isStandardOrAbove()?'':'<span style="font-size:10px;font-weight:700;color:var(--mag)">🔒 Upgrade</span>'}<div style="font-size:20px;margin-bottom:4px">🔒</div><h4 style="font-size:12px">Restricted</h4><p style="font-size:11px">Request & approve</p></div>
         </div>
       </div>
       <div id="private-link-section" style="display:none">
@@ -447,12 +477,65 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let currentUser = null, currentProfile = null, currentHub = null;
 let currentItems = [], currentCategories = [], currentSubgroups = [];
 let editingItemId = null, currentTags = [], currentImage = null;
-let activeFilterTags = [], searchQuery = '', showUntagged = false;
+let activeFilterTags = [], searchQuery = '', showUntagged = false, showOnLoan = false;
 let selectedAccountType = 'viewer', selectedAccess = 'open';
 let activeCategoryId = null, activeSubgroupId = null;
 let pendingSubgroups = [];
 let editingCategoryId = null;
 let allBrowseItems = [];
+
+
+// ── PLAN HELPERS ─────────────────────────────────────────────────────────────
+function getPlan() { return (currentProfile?.plan || 'free').toLowerCase(); }
+function isStandardOrAbove() { return ['standard','elite'].includes(getPlan()); }
+function isElite() { return getPlan() === 'elite'; }
+function getItemCap() { const p=getPlan(); if(p==='elite') return Infinity; if(p==='standard') return 100; return 20; }
+function getPlanLabel() { const p=getPlan(); if(p==='elite') return '⭐ Elite'; if(p==='standard') return '✦ Standard'; return 'Free'; }
+function getPlanBadgeClass() { return getPlan(); }
+
+function showUpgradePrompt(feature) {
+  const messages = {
+    items_free: 'You have reached the <strong>20 item limit</strong> on the Free plan. Upgrade to Standard for up to 100 items.',
+    items_standard: 'You have reached the <strong>100 item limit</strong> on the Standard plan. Upgrade to Elite for unlimited items.',
+    discoverable: 'Making your hub <strong>discoverable</strong> requires a Standard or Elite plan.',
+    categories: '<strong>Categories and sub-groups</strong> are available on Standard and Elite plans.',
+    on_loan: 'The <strong>On Loan</strong> feature is available on Standard and Elite plans.',
+    access_control: '<strong>Hub access control</strong> (restricted hubs) is available on Standard and Elite plans.',
+  };
+  const msg = messages[feature] || 'This feature requires an upgraded plan.';
+  const existing = document.getElementById('upgrade-prompt-modal');
+  if (existing) existing.remove();
+  const modal = document.createElement('div');
+  modal.id = 'upgrade-prompt-modal';
+  modal.className = 'backdrop';
+  modal.innerHTML = `<div class="modal" style="max-width:420px" onclick="event.stopPropagation()">
+    <div class="modal-hdr"><span class="modal-title">Upgrade Your Plan</span><button class="close-btn" onclick="document.getElementById('upgrade-prompt-modal').remove()">✕</button></div>
+    <div class="modal-body">
+      <div style="font-size:36px;text-align:center;margin-bottom:8px">🔒</div>
+      <p style="font-size:13px;font-weight:600;color:var(--navy);line-height:1.6;text-align:center">${msg}</p>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+        <div style="background:var(--pinkbg);border:2px solid var(--pinkmid);border-radius:8px;padding:14px 16px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <span style="font-size:13px;font-weight:700;color:var(--navy)">✦ Standard</span>
+            <span style="font-size:13px;font-weight:700;color:var(--mag)">$3 USD/month</span>
+          </div>
+          <p style="font-size:11px;font-weight:500;color:var(--dimp)">100 items · All features · Discoverable hub</p>
+        </div>
+        <div style="background:#fff8e1;border:2px solid #c9a020;border-radius:8px;padding:14px 16px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <span style="font-size:13px;font-weight:700;color:var(--navy)">⭐ Elite</span>
+            <span style="font-size:13px;font-weight:700;color:#8a6000">$6 USD/month</span>
+          </div>
+          <p style="font-size:11px;font-weight:500;color:var(--dimp)">Unlimited items · All features · Multiple hubs</p>
+        </div>
+      </div>
+      <p style="font-size:11px;font-weight:500;color:var(--dimp);text-align:center;margin-top:8px">Stripe payments coming soon. Contact us to upgrade early.</p>
+      <div class="modal-foot" style="justify-content:center"><button class="btn btn-p btn-sm" onclick="document.getElementById('upgrade-prompt-modal').remove()">Got it</button></div>
+    </div>
+  </div>`;
+  modal.onclick = () => modal.remove();
+  document.body.appendChild(modal);
+}
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 async function init() {
@@ -532,6 +615,7 @@ async function loadUser(user) {
     ({ data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single());
   }
   currentProfile = profile;
+  window._plan = profile.plan || 'free';
 
   // Handle pending token after login
   if (window._pendingToken) { const t = window._pendingToken; window._pendingToken = null; await handlePrivateLink(t); return; }
@@ -558,7 +642,9 @@ async function loadUser(user) {
 function updateHeader() {
   if (!currentProfile) return;
   document.getElementById('hdr-name').textContent = currentProfile.full_name || currentProfile.email || '';
-  document.getElementById('hdr-type').textContent = currentProfile.account_type === 'owner' ? 'Hub Owner' : 'Viewer';
+  const typeLabel = currentProfile.account_type === 'owner' ? 'Hub Owner' : 'Viewer';
+  const planLabel = getPlanLabel();
+  document.getElementById('hdr-type').textContent = `${typeLabel} · ${planLabel}`;
 }
 
 async function checkPendingRequests() {
@@ -664,8 +750,9 @@ function renderHubLayout() {
   const el = document.getElementById('tab-hub');
   const accessType = currentHub.access_type || 'open';
   el.innerHTML = `
+    ${(()=>{const cap=getItemCap();const pct=cap===Infinity?0:Math.round(currentItems.length/cap*100);const nearCap=cap!==Infinity&&currentItems.length>=cap*0.8;return nearCap?`<div class="upgrade-banner"><p>📦 You have used <strong>${currentItems.length} of ${cap} items</strong> on your ${getPlanLabel()} plan.${currentItems.length>=cap?' You\'ve reached your limit — ':' Getting close — '}<strong>upgrade to add more.</strong></p><button class="upgrade-btn" onclick="showUpgradePrompt('items_${getPlan()}')">View Plans</button></div>`:''})()}
     <div class="hub-hdr">
-      <div class="hub-info"><h2>${currentHub.name}</h2>${currentHub.label?`<p>${currentHub.label}</p>`:''}</div>
+      <div class="hub-info"><h2>${currentHub.name}</h2>${currentHub.label?`<p>${currentHub.label}</p>`:''}<p style="font-size:11px;color:var(--dimp);margin-top:2px">${getItemCap()===Infinity?currentItems.length+' items':currentItems.length+' / '+getItemCap()+' items'} · <span class="plan-badge ${getPlanBadgeClass()}">${getPlanLabel()}</span></p></div>
       <div class="hub-actions">
         <span class="access-badge ${accessType}">${accessType==='open'?'🌐 Open':'🔒 Restricted'}</span>
         <label class="discover-toggle" style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--dimp)">
@@ -673,7 +760,7 @@ function renderHubLayout() {
           ${currentHub.is_discoverable?'Discoverable':'Hidden'}
         </label>
         <button class="add-btn navy btn-sm" onclick="openHubModal()">⚙ Settings</button>
-        <button class="add-btn navy btn-sm" onclick="openCatModal()">+ Category</button>
+        ${isStandardOrAbove() ? '<button class="add-btn navy btn-sm" onclick="openCatModal()">+ Category</button>' : '<button class="add-btn navy btn-sm" onclick="showUpgradePrompt(\'categories\')" style="opacity:0.5">🔒 Category</button>'}
       </div>
     </div>
     <div class="hub-layout">
@@ -691,7 +778,7 @@ function renderHubLayout() {
       <div>
         <div class="toolbar">
           <div class="srch"><span class="srch-icon">🔍</span><input id="hub-search-input" placeholder="Search items or tags…" autocomplete="off"/></div>
-          <div class="tag-dropdown-wrap" id="hub-tag-wrap"><button class="tag-dropdown-btn" id="hub-tag-btn" onclick="toggleHubTagDropdown()"><span id="hub-tag-label">Filter by tag</span><span class="tag-dropdown-arrow">▼</span></button><div class="tag-dropdown-menu" id="hub-tag-menu"><div class="tag-dropdown-search"><input type="text" placeholder="Search tags…" id="hub-tag-search" oninput="filterHubTagList(this.value)"/></div><div id="hub-tag-list"></div><div class="tag-dropdown-notags" id="hub-notags-item" onclick="toggleUntagged()"><span class="tag-check" id="hub-notags-check"></span>⚠ No tags only</div></div></div>
+          <div class="tag-dropdown-wrap" id="hub-tag-wrap"><button class="tag-dropdown-btn" id="hub-tag-btn" onclick="toggleHubTagDropdown()"><span id="hub-tag-label">Filter by tag</span><span class="tag-dropdown-arrow">▼</span></button><div class="tag-dropdown-menu" id="hub-tag-menu"><div class="tag-dropdown-search"><input type="text" placeholder="Search tags…" id="hub-tag-search" oninput="filterHubTagList(this.value)"/></div><div id="hub-tag-list"></div><div class="tag-dropdown-notags" id="hub-notags-item" onclick="toggleUntagged()"><span class="tag-check" id="hub-notags-check"></span>⚠ No tags only</div><div class="tag-dropdown-notags" id="hub-onloan-item" onclick="toggleOnLoanFilter()" style="border-top:none"><span class="tag-check" id="hub-onloan-check"></span>📤 On Loan</div></div></div>
           <span class="cnt" id="hub-cnt"></span>
           <button class="add-btn" onclick="openItemModal()">＋ Add Item</button>
           <button class="add-btn navy" onclick="openBulkModal()">⬆ Bulk Upload</button>
@@ -756,12 +843,16 @@ function updateHubDynamic() {
   const noTagsCheck = document.getElementById('hub-notags-check');
   if (noTagsItem) noTagsItem.classList.toggle('checked', showUntagged);
   if (noTagsCheck) noTagsCheck.textContent = showUntagged ? '✓' : '';
+  const onLoanItem = document.getElementById('hub-onloan-item');
+  const onLoanCheck = document.getElementById('hub-onloan-check');
+  if (onLoanItem) onLoanItem.classList.toggle('checked', showOnLoan);
+  if (onLoanCheck) onLoanCheck.textContent = showOnLoan ? '✓' : '';
   // Update button label
   const btn = document.getElementById('hub-tag-btn');
   const label = document.getElementById('hub-tag-label');
   if (label) {
-    const total = activeFilterTags.length + (showUntagged ? 1 : 0);
-    label.textContent = total > 0 ? `${total} tag filter${total>1?'s':''} active` : 'Filter by tag';
+    const total = activeFilterTags.length + (showUntagged ? 1 : 0) + (showOnLoan ? 1 : 0);
+    label.textContent = total > 0 ? `${total} filter${total>1?'s':''} active` : 'Filter by tag';
     if (btn) btn.classList.toggle('has-active', total > 0);
   }
   const cnt = document.getElementById('hub-cnt');
@@ -792,14 +883,16 @@ function filterItems(items) {
     const matchSearch=!q||fuzzyMatch(i.name,q)||(i.tags||[]).some(t=>fuzzyMatch(t,q));
     const matchTags=activeFilterTags.length===0||activeFilterTags.every(t=>(i.tags||[]).includes(t));
     const matchUntagged=!showUntagged||!i.tags||i.tags.length===0;
+    const matchOnLoan=!showOnLoan||i.on_loan===true;
     const matchCat=!activeCategoryId||i.category_id===activeCategoryId;
     const matchSub=!activeSubgroupId||i.subgroup_id===activeSubgroupId;
-    return matchSearch&&matchTags&&matchUntagged&&matchCat&&matchSub;
+    return matchSearch&&matchTags&&matchUntagged&&matchOnLoan&&matchCat&&matchSub;
   });
 }
 function toggleFilterTag(tag) { activeFilterTags=activeFilterTags.includes(tag)?activeFilterTags.filter(t=>t!==tag):[...activeFilterTags,tag]; updateHubDynamic(); }
-function toggleUntagged() { showUntagged=!showUntagged; activeFilterTags=[]; searchQuery=''; const i=document.getElementById('hub-search-input'); if(i)i.value=''; updateHubDynamic(); }
-function clearAllFilters() { searchQuery=''; activeFilterTags=[]; showUntagged=false; const i=document.getElementById('hub-search-input'); if(i)i.value=''; updateHubDynamic(); }
+function toggleUntagged() { showUntagged=!showUntagged; showOnLoan=false; activeFilterTags=[]; searchQuery=''; const i=document.getElementById('hub-search-input'); if(i)i.value=''; updateHubDynamic(); }
+function toggleOnLoanFilter() { showOnLoan=!showOnLoan; showUntagged=false; activeFilterTags=[]; searchQuery=''; const i=document.getElementById('hub-search-input'); if(i)i.value=''; updateHubDynamic(); }
+function clearAllFilters() { searchQuery=''; activeFilterTags=[]; showUntagged=false; showOnLoan=false; const i=document.getElementById('hub-search-input'); if(i)i.value=''; updateHubDynamic(); }
 
 function renderItemCard(item, editable) {
   const q=searchQuery.trim();
@@ -807,6 +900,7 @@ function renderItemCard(item, editable) {
   const cat=currentCategories.find(c=>c.id===item.category_id);
   const sub=currentSubgroups.find(s=>s.id===item.subgroup_id);
   const catLabel=cat?`<div class="card-cat">${cat.name}${sub?' › '+sub.name:''}</div>`:'';
+  const loanBadge=item.on_loan?`<span class="loan-badge">📤 On Loan${item.loaned_to?' → '+item.loaned_to:''}</span>`:''
   const imgHtml=item.image_url?`<img src="${item.image_url}" alt="${item.name}" onerror="this.parentNode.innerHTML='📦'"/>`:'📦';
   const tagsHtml=(item.tags||[]).map(t=>`<span class="chip">${highlightMatch(t,q)}</span>`).join('');
   const acts=editable?`<div class="card-acts"><button class="ic-btn" onclick="event.stopPropagation();openItemModal('${item.id}')">✏️</button><button class="ic-btn del" onclick="event.stopPropagation();deleteItem('${item.id}')">🗑️</button></div>`:'';
@@ -815,6 +909,7 @@ function renderItemCard(item, editable) {
     <div class="card-body">
       <div class="card-name">${displayName}</div>
       ${item.product_code?`<div class="card-code">${item.product_code}</div>`:''}
+      ${loanBadge}
       ${catLabel}
       ${item.owner_name?`<div class="card-owner">by ${item.owner_name}</div>`:''}
       ${tagsHtml?`<div class="card-tags">${tagsHtml}</div>`:''}
@@ -831,6 +926,7 @@ async function createHub() {
   currentHub=data; await renderHubTab(); showToast('Hub created!');
 }
 async function toggleDiscoverable() {
+  if (!isStandardOrAbove()) { showUpgradePrompt('discoverable'); return; }
   const newVal=!currentHub.is_discoverable;
   await sb.from('hubs').update({is_discoverable:newVal}).eq('id',currentHub.id);
   currentHub.is_discoverable=newVal; renderHubLayout(); showToast(newVal?'Hub is now discoverable':'Hub is now hidden');
@@ -904,7 +1000,28 @@ async function deleteSubgroupConfirm(subId) {
 }
 
 // ── ITEM MODAL ────────────────────────────────────────────────────────────────
-async function openItemModal(itemId) {
+function toggleLoanStatus() {
+  const toggle = document.getElementById('loan-toggle');
+  const field = document.getElementById('loan-to-field');
+  const label = document.getElementById('loan-status-label');
+  if (!toggle) return;
+  toggle.classList.toggle('on');
+  const isOn = toggle.classList.contains('on');
+  if (field) field.style.display = isOn ? 'block' : 'none';
+  if (label) label.textContent = isOn ? 'On Loan' : 'In Stock';
+  if (!isOn) { const inp = document.getElementById('loan-to-input'); if(inp) inp.value = ''; }
+}
+
+async async function openItemModal(itemId) {
+  // Check item cap for new items
+  if (!itemId) {
+    const cap = getItemCap();
+    if (currentItems.length >= cap) {
+      const plan = getPlan();
+      showUpgradePrompt(plan === 'free' ? 'items_free' : 'items_standard');
+      return;
+    }
+  }
   editingItemId=itemId||null; currentTags=[]; currentImage=null;
   document.getElementById('item-modal-title').textContent=itemId?'Edit Item':'Add Item';
   document.getElementById('item-name').value='';
@@ -914,6 +1031,15 @@ async function openItemModal(itemId) {
   document.getElementById('item-form-alert').innerHTML='';
   document.getElementById('upload-area').style.display='block';
   document.getElementById('preview-area').style.display='none';
+  // Reset loan status
+  const loanToggle = document.getElementById('loan-toggle');
+  const loanToField = document.getElementById('loan-to-field');
+  const loanLabel = document.getElementById('loan-status-label');
+  const loanInput = document.getElementById('loan-to-input');
+  if (loanToggle) loanToggle.classList.remove('on');
+  if (loanToField) loanToField.style.display = 'none';
+  if (loanLabel) loanLabel.textContent = 'In Stock';
+  if (loanInput) loanInput.value = '';
 
   // Load categories into dropdown
   const catSel=document.getElementById('item-category');
@@ -928,6 +1054,12 @@ async function openItemModal(itemId) {
       currentTags=[...(item.tags||[])]; renderTagsList();
       if(item.category_id){ catSel.value=item.category_id; await loadSubgroups(item.category_id, item.subgroup_id); }
       if(item.image_url){ currentImage=item.image_url; document.getElementById('img-preview').src=item.image_url; document.getElementById('upload-area').style.display='none'; document.getElementById('preview-area').style.display='block'; }
+      if(item.on_loan){
+        if(loanToggle) loanToggle.classList.add('on');
+        if(loanToField) loanToField.style.display='block';
+        if(loanLabel) loanLabel.textContent='On Loan';
+        if(loanInput) loanInput.value=item.loaned_to||'';
+      }
     }
   }
   document.getElementById('item-modal').style.display='flex';
@@ -953,7 +1085,9 @@ async function saveItem() {
   const code=document.getElementById('item-code').value.trim();
   const catId=document.getElementById('item-category').value||null;
   const subId=document.getElementById('item-subgroup').value||null;
-  const data={hub_id:currentHub.id,name,product_code:code||null,tags:currentTags,image_url:currentImage,category_id:catId,subgroup_id:subId};
+  const onLoan=document.getElementById('loan-toggle')?.classList.contains('on')||false;
+  const loanedTo=onLoan?(document.getElementById('loan-to-input')?.value.trim()||null):null;
+  const data={hub_id:currentHub.id,name,product_code:code||null,tags:currentTags,image_url:currentImage,category_id:catId,subgroup_id:subId,on_loan:onLoan,loaned_to:loanedTo};
   if(editingItemId){
     const {error}=await sb.from('items').update(data).eq('id',editingItemId);
     if(error) return showAlert('item-form-alert',error.message,'error');
