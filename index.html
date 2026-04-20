@@ -746,13 +746,27 @@ async function renderHubTab() {
   renderHubLayout();
 }
 
+function buildUpgradeBanner() {
+  const cap = getItemCap();
+  if (cap === Infinity) return '';
+  const nearCap = currentItems.length >= cap * 0.8;
+  if (!nearCap) return '';
+  const atCap = currentItems.length >= cap;
+  const plan = getPlan();
+  const msg = atCap
+    ? "You have reached your limit — upgrade to add more."
+    : "Getting close to your limit — upgrade for more space.";
+  const promptKey = plan === 'free' ? 'items_free' : 'items_standard';
+  return '<div class="upgrade-banner"><p>\u{1F4E6} You have used <strong>' + currentItems.length + ' of ' + cap + ' items</strong> on your ' + getPlanLabel() + ' plan. ' + msg + '</p><button class="upgrade-btn" onclick="showUpgradePrompt(\'' + promptKey + '\')">View Plans</button></div>';
+}
+
 function renderHubLayout() {
   const el = document.getElementById('tab-hub');
   const accessType = currentHub.access_type || 'open';
   el.innerHTML = `
-    ${(()=>{const cap=getItemCap();const pct=cap===Infinity?0:Math.round(currentItems.length/cap*100);const nearCap=cap!==Infinity&&currentItems.length>=cap*0.8;return nearCap?`<div class="upgrade-banner"><p>📦 You have used <strong>${currentItems.length} of ${cap} items</strong> on your ${getPlanLabel()} plan.${currentItems.length>=cap?' You\'ve reached your limit — ':' Getting close — '}<strong>upgrade to add more.</strong></p><button class="upgrade-btn" onclick="showUpgradePrompt('items_${getPlan()}')">View Plans</button></div>`:''})()}
+    ${buildUpgradeBanner()}
     <div class="hub-hdr">
-      <div class="hub-info"><h2>${currentHub.name}</h2>${currentHub.label?`<p>${currentHub.label}</p>`:''}<p style="font-size:11px;color:var(--dimp);margin-top:2px">${getItemCap()===Infinity?currentItems.length+' items':currentItems.length+' / '+getItemCap()+' items'} · <span class="plan-badge ${getPlanBadgeClass()}">${getPlanLabel()}</span></p></div>
+      <div class="hub-info"><h2>${currentHub.name}</h2>${currentHub.label?`<p>${currentHub.label}</p>`:''}<p style="font-size:11px;color:var(--dimp);margin-top:2px">${getItemCap()===Infinity?currentItems.length+' items':currentItems.length+' / '+getItemCap()+' items'} &middot; <span class="plan-badge ${getPlanBadgeClass()}">${getPlanLabel()}</span></p></div>
       <div class="hub-actions">
         <span class="access-badge ${accessType}">${accessType==='open'?'🌐 Open':'🔒 Restricted'}</span>
         <label class="discover-toggle" style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--dimp)">
